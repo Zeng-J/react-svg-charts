@@ -1,0 +1,68 @@
+.sc-tooltips {
+  padding: 6px 10px;
+  position: absolute;
+  border-radius: 4px;
+  visibility: hidden;
+  background: #fff;
+  box-shadow: 0 6px 30px rgba(228, 231, 238, 60%);
+  transition: left 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s,
+    top 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.sc-tooltips::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  border-radius: 2px 0;
+  transform: rotate(45deg);
+  background: inherit;
+}
+
+.sc-tooltips-title {
+  margin-bottom: 3px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: #4d535c;
+}
+
+.sc-tooltips-list {
+  font-size: 12px;
+  line-height: 17px;
+}
+
+.sc-tooltips-list-item {
+  display: flex;
+  align-items: center;
+}
+
+.sc-tooltips-list-item::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-right: 4px;
+  background: currentcolor;
+}
+
+.sc-tooltips-list-item + .sc-tooltips-list-item {
+  margin-top: 10px;
+}
+
+.sc-tooltips-label {
+  color: #4d535c;
+}
+
+.sc-tooltips-val {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 21px;
+  color: #1f242e;
+}

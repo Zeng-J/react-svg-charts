@@ -1,0 +1,3 @@
+// 判断鼠标在哪个区域内 返回0|1|...
+export const whereIsArea = (x: number, offestX: number, averageWidth: number): number =>
+  Math.floor((x - offestX) / averageWidth)
