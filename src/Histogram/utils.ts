@@ -1,39 +1,69 @@
-import type { ValueType, DataListItem } from '../data';
+import type { DataListItem, ValueType } from '../data';
 
 import type {
   CategoryType,
   ChartDataListItem,
-  GenerateDataConfigType,
-  ConfigTypeProps,
+  ConfigType,
   ConstantType,
+  GenerateDataConfigType,
 } from './data';
 
 const defaultConfig = {
   labelFontSize: 12,
-  labelLineHeight: 16,
   yLabelWidth: 36,
-  yLabelPaddingRight: 14,
-  xLabelHeight: 24,
+  yLabelPaddingRight: 8,
+  xLabelPaddingTop: 8,
   yMaxValue: 100,
   yCount: 5,
-  barWidth: 12,
-  barGap: 8,
+  barGap: 4,
+  autoFit: false,
 };
 
-export function generateConfig(options: ConfigTypeProps): ConstantType {
+interface DataTotalType {
+  /** 数据条数，也表示x轴的坐标数 */
+  dataTotal: number;
+  /** 每个坐标点对应的多少组 */
+  groupTotal: number;
+}
+
+function calcBarWidth({
+  dataTotal,
+  groupTotal,
+  barGap,
+  horizontalAxisWidth,
+}: DataTotalType & { barGap: number; horizontalAxisWidth: number }) {
+  // 每个坐标可用宽度，再除以2 是因为每个坐标之间要有空隙
+  const tickWidth = horizontalAxisWidth / dataTotal / 2;
+  // 每一个柱形的宽度, barGap 是指每个柱形间隙宽度
+  const barWidth = (tickWidth - (groupTotal - 1) * barGap) / groupTotal;
+  // 宽度太大了也不好看
+  return Math.min(barWidth, 200);
+}
+
+export function generateConfig(
+  options: Partial<ConfigType> & Pick<ConfigType, 'width' | 'height'>,
+  extra: DataTotalType,
+): ConstantType {
   const config = {
     ...defaultConfig,
     ...options,
   };
-  const yInitialPoint = config.labelLineHeight / 2;
-  const verticalAxisHeight = config.height - config.xLabelHeight - yInitialPoint;
+  const verticalAxisHeight =
+    config.height - config.labelFontSize - config.xLabelPaddingTop;
+  const horizontalAxisWidth = config.width - config.yLabelWidth;
+
+  const barWidth = calcBarWidth({
+    ...extra,
+    horizontalAxisWidth,
+    barGap: config.barGap,
+  });
 
   return {
     ...config,
-    yInitialPoint,
-    horizontalAxisWidth: config.width - config.yLabelWidth,
+    barWidth,
+    horizontalAxisWidth,
     verticalAxisHeight,
-    yGap: verticalAxisHeight / config.yCount,
+    yGap: (verticalAxisHeight - config.labelFontSize / 2) / config.yCount,
   };
 }
 
@@ -43,7 +73,6 @@ export function generateData(
     horizontalAxisWidth,
     yMaxValue,
     verticalAxisHeight,
-    yInitialPoint,
     yLabelWidth,
     barGap,
     barWidth,
@@ -54,11 +83,6 @@ export function generateData(
   // 平分横向坐标宽度
   const averageWidth = horizontalAxisWidth / list.length;
 
-  // const genCategory = (v: ValueType, xTick: number, len: number, order: number): CategoryType => {
-
-  // }
-
-  // eslint-disable-next-line no-plusplus
   for (let i = 0; i < len; i++) {
     const item = list[i];
     let category: CategoryType[] = [];
@@ -71,7 +95,9 @@ export function generateData(
     // 多柱形图图
     if (Array.isArray(item.value)) {
       valueArr = item.value;
-    } else if (Object.prototype.toString.call(item.value) === '[object Object]') {
+    } else if (
+      Object.prototype.toString.call(item.value) === '[object Object]'
+    ) {
       // 单柱形图
       valueArr = [item.value];
     } else {
@@ -85,16 +111,16 @@ export function generateData(
 
     category = valueArr.map((v, index) => {
       // 计算柱形高度
-      const height = (v.value / yMaxValue) * verticalAxisHeight;
+      const barHeight = (v.value / yMaxValue) * verticalAxisHeight;
       // xPosition、yPosition是柱形左上角的坐标点
       const xPosition = barInitialX + index * (barGap + barWidth);
-      const yPosition = verticalAxisHeight + yInitialPoint - height;
+      const yPosition = verticalAxisHeight - barHeight;
 
       return {
         ...v,
         xPosition,
         yPosition,
-        height,
+        height: barHeight,
       };
     });
 

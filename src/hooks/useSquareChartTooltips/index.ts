@@ -1,7 +1,7 @@
 import { RefObject, useCallback, useRef } from 'react';
+import { COLORS } from 'react-svg-charts/constants';
 import useThrottle from 'react-svg-charts/hooks/useThrottle';
 import { whereIsArea } from 'react-svg-charts/utils';
-import { COLORS } from 'react-svg-charts/constants';
 
 import type { CommonChartDataListItem } from 'react-svg-charts/data';
 
@@ -12,12 +12,17 @@ interface UseSquareChartTooltipsProps<T> {
   data: T[];
 }
 
-const TOOLTIPS_CLASS_PREFIX = 'sc-tooltips';
+const TOOLTIPS_CLASS_PREFIX = 'rsc-tooltips';
 
 // 方形图表的提示弹窗hooks
 export default function useSquareChartTooltips<
   T extends CommonChartDataListItem = CommonChartDataListItem,
->({ data, containerRef, offestX, horizontalAxisWidth }: UseSquareChartTooltipsProps<T>) {
+>({
+  data,
+  containerRef,
+  offestX,
+  horizontalAxisWidth,
+}: UseSquareChartTooltipsProps<T>) {
   const tooltipsRef = useRef<HTMLDivElement>();
   const handleHiddenTooltips = useCallback(() => {
     if (tooltipsRef.current) {
@@ -50,7 +55,9 @@ export default function useSquareChartTooltips<
           dataset.lastIndex = String(index);
 
           tooltipsRef.current.innerHTML = `
-                <div class="${TOOLTIPS_CLASS_PREFIX}-title">${currentItem.label}</div>
+                <div class="${TOOLTIPS_CLASS_PREFIX}-title">${
+            currentItem.label
+          }</div>
                   <ul class="${TOOLTIPS_CLASS_PREFIX}-list">
                     ${currentItem.category
                       .map(
@@ -67,7 +74,8 @@ export default function useSquareChartTooltips<
         }
 
         const { scrollWidth } = containerRef.current;
-        const { offsetHeight: tooltipsHeight, offsetWidth: tooltipsWidth } = tooltipsRef.current;
+        const { offsetHeight: tooltipsHeight, offsetWidth: tooltipsWidth } =
+          tooltipsRef.current;
 
         // 浮窗定位（浮窗位置限制不会超出容器范围）
         tooltipsRef.current.setAttribute(

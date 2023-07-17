@@ -15,18 +15,28 @@ export type DataListItem = {
 export type CommonConfigType = {
   width: number;
   height: number;
-  labelFontSize: number; // label字体大小
-  labelLineHeight: number; // label的line-height
-  yLabelWidth: number; // y轴label宽度
-  yLabelPaddingRight: number; // y轴label的右边距
-  xLabelHeight: number; // x轴label高度
-  yMaxValue: number; // y轴最大值
-  yCount: number; // y轴显示多少条刻度线
+  /** label字体大小 */
+  labelFontSize: number;
+  /** y轴label宽度 */
+  yLabelWidth: number;
+  /** y轴label的右边距 */
+  yLabelPaddingRight: number;
+  /** x轴label的上边距 */
+  xLabelPaddingTop: number;
+  /** y轴最大值 */
+  yMaxValue: number;
+  /** y轴显示多少条刻度线 */
+  yCount: number;
+  /** 自动取图表容器的宽高 */
+  autoFit: boolean;
 };
 
 // 内部处理后的图表数据类型
 export interface CommonChartDataListItem<T extends ValueType = ValueType> {
-  tickPosition: number; // x轴的每条数据的坐标点
-  label: string | number; // x轴的label
-  category: T[]; // 存储y坐标点等数据
+  /** x轴的每条数据的坐标点 */
+  tickPosition: number;
+  /** x轴的label */
+  label: string | number;
+  /** 存储y坐标点等数据 */
+  category: T[];
 }

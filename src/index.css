@@ -1,4 +1,10 @@
-.sc-tooltips {
+.rsc-container {
+  height: inherit;
+  position: relative;
+  line-height: 0;
+}
+
+.rsc-tooltips {
   padding: 6px 10px;
   position: absolute;
   border-radius: 4px;
@@ -11,7 +17,7 @@
   white-space: nowrap;
 }
 
-.sc-tooltips::after {
+.rsc-tooltips::after {
   content: '';
   position: absolute;
   left: 50%;
@@ -24,7 +30,7 @@
   background: inherit;
 }
 
-.sc-tooltips-title {
+.rsc-tooltips-title {
   margin-bottom: 3px;
   font-weight: 500;
   font-size: 14px;
@@ -32,17 +38,20 @@
   color: #4d535c;
 }
 
-.sc-tooltips-list {
+.rsc-tooltips-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   font-size: 12px;
   line-height: 17px;
 }
 
-.sc-tooltips-list-item {
+.rsc-tooltips-list-item {
   display: flex;
   align-items: center;
 }
 
-.sc-tooltips-list-item::before {
+.rsc-tooltips-list-item::before {
   content: '';
   display: inline-block;
   width: 6px;
@@ -52,15 +61,15 @@
   background: currentcolor;
 }
 
-.sc-tooltips-list-item + .sc-tooltips-list-item {
+.rsc-tooltips-list-item + .rsc-tooltips-list-item {
   margin-top: 10px;
 }
 
-.sc-tooltips-label {
+.rsc-tooltips-label {
   color: #4d535c;
 }
 
-.sc-tooltips-val {
+.rsc-tooltips-val {
   font-weight: 700;
   font-size: 18px;
   line-height: 21px;
