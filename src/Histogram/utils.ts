@@ -1,11 +1,11 @@
-import type { DataListItem, ValueType } from '../data';
+import type { DataListItem, ValueType } from 'react-svg-charts/data';
 
 import type {
-  CategoryType,
-  ChartDataListItem,
-  ConfigType,
-  ConstantType,
-  GenerateDataConfigType,
+  HistogramCategoryType,
+  HistogramChartDataListItem,
+  HistogramConfigType,
+  HistogramConstantType,
+  HistogramGenerateDataConfigType,
 } from './data';
 
 const defaultConfig = {
@@ -41,9 +41,10 @@ function calcBarWidth({
 }
 
 export function generateConfig(
-  options: Partial<ConfigType> & Pick<ConfigType, 'width' | 'height'>,
+  options: Partial<HistogramConfigType> &
+    Pick<HistogramConfigType, 'width' | 'height'>,
   extra: DataTotalType,
-): ConstantType {
+): HistogramConstantType {
   const config = {
     ...defaultConfig,
     ...options,
@@ -76,16 +77,16 @@ export function generateData(
     yLabelWidth,
     barGap,
     barWidth,
-  }: GenerateDataConfigType,
-): ChartDataListItem[] {
-  const dList: ChartDataListItem[] = [];
+  }: HistogramGenerateDataConfigType,
+): HistogramChartDataListItem[] {
+  const dList: HistogramChartDataListItem[] = [];
   const len = list.length;
   // 平分横向坐标宽度
   const averageWidth = horizontalAxisWidth / list.length;
 
   for (let i = 0; i < len; i++) {
     const item = list[i];
-    let category: CategoryType[] = [];
+    let category: HistogramCategoryType[] = [];
 
     // x坐标刻度点
     const tickPosition = averageWidth * (i + 0.5) + yLabelWidth;

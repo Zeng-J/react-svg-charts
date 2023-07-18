@@ -20,7 +20,6 @@ export default () => (
 ```
 
 ```jsx
-import { useState } from 'react';
 import { Histogram } from 'react-svg-charts';
 
 export default () => {

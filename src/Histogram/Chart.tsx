@@ -11,7 +11,7 @@ import useThrottle from 'react-svg-charts/hooks/useThrottle';
 import { COLORS } from 'react-svg-charts/constants';
 import type { DataListItem } from '../data';
 import { whereIsArea } from '../utils';
-import type { ConfigType } from './data';
+import type { HistogramConfigType } from './data';
 import { generateConfig, generateData } from './utils';
 
 let idCounter = 0;
@@ -19,7 +19,7 @@ const RECT_BG_PREFIX = 'rsc-histogram_gridBg_';
 
 export interface HistogramChartProps {
   data: DataListItem[];
-  config: Partial<ConfigType>;
+  config: Partial<HistogramConfigType>;
   width: number;
   height: number;
   containerRef: RefObject<HTMLDivElement>;
