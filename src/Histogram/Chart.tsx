@@ -19,7 +19,7 @@ const RECT_BG_PREFIX = 'rsc-histogram_gridBg_';
 
 export interface HistogramChartProps {
   data: DataListItem[];
-  config: Partial<HistogramConfigType>;
+  config?: Partial<HistogramConfigType>;
   width: number;
   height: number;
   containerRef: RefObject<HTMLDivElement>;
@@ -27,7 +27,7 @@ export interface HistogramChartProps {
 
 export default function HistogramChart({
   data,
-  config,
+  config = {},
   width,
   height,
   containerRef,
