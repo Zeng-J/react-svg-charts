@@ -1,12 +1,12 @@
 ---
 hero:
-  title: library
+  title: react-svg-charts
   description: 基于react的svg图表组件库
-  actions:
-    - text: Hello
-      link: /
-    - text: World
-      link: /
+  # actions:
+  #   - text: Hello
+  #     link: /
+  #   - text: World
+  #     link: /
 features:
   - title: Hello
     emoji: 💎
@@ -18,5 +18,3 @@ features:
     emoji: 🚀
     description: Put ! description here
 ---
-
-react-svg-charts
