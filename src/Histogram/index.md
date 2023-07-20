@@ -1,4 +1,4 @@
-# 直方图-Histogram
+# 柱形图-Histogram
 
 ## 代码演示
 
@@ -21,7 +21,7 @@ export default () => (
 );
 ```
 
-### 多组直方图
+### 多组柱形图
 
 ```jsx
 import { Histogram } from 'react-svg-charts';

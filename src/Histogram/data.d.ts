@@ -8,7 +8,8 @@ interface HistogramCategoryType extends ValueType {
 
 export interface HistogramChartDataListItem
   extends CommonChartDataListItem<HistogramCategoryType> {
-  gridWidth: number;
+  /** 柱形hover时的背景色宽度 */
+  barBackgroundWidth: number;
 }
 
 export interface HistogramConfigType extends CommonConfigType {

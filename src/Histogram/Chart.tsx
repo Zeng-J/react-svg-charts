@@ -12,7 +12,7 @@ import { COLORS } from 'react-svg-charts/constants';
 import type { DataListItem } from '../data';
 import { whereIsArea } from '../utils';
 import type { HistogramConfigType } from './data';
-import { generateConfig, generateData } from './utils';
+import { generateChartData, generateConfig } from './utils';
 
 let idCounter = 0;
 const RECT_BG_PREFIX = 'rsc-histogram_gridBg_';
@@ -55,9 +55,9 @@ export default function HistogramChart({
     },
   );
 
-  const dataList = useMemo(
+  const chatData = useMemo(
     () =>
-      generateData(data, {
+      generateChartData(data, {
         horizontalAxisWidth,
         yMaxValue,
         verticalAxisHeight,
@@ -95,22 +95,22 @@ export default function HistogramChart({
 
   // 提示窗
   const { handleHiddenTooltips, handleShowTooltips } = useSquareChartTooltips({
-    data: dataList,
+    data: chatData,
     horizontalAxisWidth,
     offestX: yLabelWidth,
     containerRef,
   });
 
-  // hover显示网格背景色
-  const gridRef = useRef<SVGGElement>(null);
-  const gridRender = useCallback(
+  // hover显示柱形背景色
+  const barBgRef = useRef<SVGGElement>(null);
+  const barBgRender = useCallback(
     (x: number, wid: number) => {
-      if (gridRef.current) {
-        if (gridRef.current.firstChild) {
-          gridRef.current.children[0].setAttribute('x', String(x - wid / 2));
-          gridRef.current.children[0].setAttribute('width', String(wid));
+      if (barBgRef.current) {
+        if (barBgRef.current.firstChild) {
+          barBgRef.current.children[0].setAttribute('x', String(x - wid / 2));
+          barBgRef.current.children[0].setAttribute('width', String(wid));
         } else {
-          gridRef.current.innerHTML = `
+          barBgRef.current.innerHTML = `
           <rect
             x="${x - wid / 2}"
             y="0"
@@ -120,13 +120,13 @@ export default function HistogramChart({
           />
         `;
         }
-        gridRef.current?.setAttribute('style', 'visibility: visible;');
+        barBgRef.current?.setAttribute('style', 'visibility: visible;');
       }
     },
     [id, verticalAxisHeight],
   );
   const handleHiddenAccessory = useCallback(() => {
-    gridRef.current?.setAttribute('style', 'visibility: hidden;');
+    barBgRef.current?.setAttribute('style', 'visibility: hidden;');
   }, []);
 
   const handleShowAccessory = useThrottle(
@@ -136,10 +136,10 @@ export default function HistogramChart({
         yLabelWidth,
         horizontalAxisWidth / data.length,
       );
-      const currentItem = dataList[index];
+      const currentItem = chatData[index];
       if (currentItem) {
-        // 网格背景色绘制
-        gridRender(currentItem.tickPosition, currentItem.gridWidth);
+        // 柱形背景色绘制
+        barBgRender(currentItem.tickPosition, currentItem.barBackgroundWidth);
       } else {
         handleHiddenAccessory();
       }
@@ -162,31 +162,93 @@ export default function HistogramChart({
     handleHiddenTooltips();
   };
 
-  // 坐标系
-  const coordinateSystemNode = useMemo(() => {
+  // y轴坐标系
+  const yCoordinateAxisNode = useMemo(() => {
+    // 刻度线单位值
     const yUnit = yMaxValue / yCount;
+    // y轴刻度线
     const yLineList = Array.from({ length: yCount + 1 }).map(
       (_, i) => yMaxValue - yUnit * i,
     );
+    return (
+      <g id={`histogram-y-coordinate-${id}`}>
+        {yLineList.map((val, index) => {
+          const yAxis = index * yGap + labelFontSize / 2;
+          return (
+            <g key={val}>
+              <text
+                x={yLabelWidth - yLabelPaddingRight}
+                y={yAxis}
+                fill="#828B94"
+                fontSize={labelFontSize}
+                dominantBaseline="central"
+                style={{ textAnchor: 'end' }}
+              >
+                {val}
+              </text>
+              <line
+                x1={yLabelWidth}
+                y1={yAxis}
+                x2={width}
+                y2={yAxis}
+                stroke="#E1E8F7"
+                strokeWidth="1"
+                // x轴线为实线，其他为虚线
+                strokeDasharray={index !== yCount ? '4, 4' : undefined}
+              />
+            </g>
+          );
+        })}
+      </g>
+    );
+  }, [
+    id,
+    labelFontSize,
+    width,
+    yCount,
+    yGap,
+    yLabelPaddingRight,
+    yLabelWidth,
+    yMaxValue,
+  ]);
 
-    const xCoordinateAxisRender = (y: number) => (
-      /* x坐标轴 */
-      <g id={`x-coordinate-axis-${id}`}>
-        <line
-          x1={yLabelWidth}
-          y1={y}
-          x2={width}
-          y2={y}
-          stroke="#E1E8F7"
-          strokeWidth="1"
-        />
-        {dataList.map((item) => (
+  // 柱形
+  const barNode = useMemo(() => {
+    if (chatData.length <= 0) {
+      return null;
+    }
+    return (
+      <g>
+        {chatData.map((item) => (
+          <g key={item.label}>
+            {item.category.map((sub, subIndex) => (
+              <rect
+                key={`${item.label}_${sub.name}`}
+                rx="2"
+                x={sub.xPosition}
+                y={sub.yPosition}
+                height={sub.height}
+                width={barWidth}
+                fill={COLORS[subIndex]}
+              />
+            ))}
+          </g>
+        ))}
+      </g>
+    );
+  }, [chatData, barWidth]);
+
+  // x轴坐标系
+  const xCoordinateAxisNode = useMemo(() => {
+    return (
+      <g id={`histogram-x-coordinate-axis-${id}`}>
+        {chatData.map((item) => (
           <g key={item.tickPosition}>
             <line
               x1={item.tickPosition}
               x2={item.tickPosition}
-              y1={y}
-              y2={y + 2}
+              y1={verticalAxisHeight}
+              y2={verticalAxisHeight + 6}
               stroke="#E1E8F7"
               strokeWidth="1"
             />
@@ -204,77 +266,7 @@ export default function HistogramChart({
         ))}
       </g>
     );
-    return (
-      <g id={`coordinateSystem-${id}`}>
-        {yLineList.map((val, index) => {
-          const yAxis = index * yGap + labelFontSize / 2;
-          return (
-            <g key={val}>
-              <text
-                x={yLabelWidth - yLabelPaddingRight}
-                y={yAxis}
-                fill="#828B94"
-                fontSize={labelFontSize}
-                dominantBaseline="central"
-                style={{ textAnchor: 'end' }}
-              >
-                {val}
-              </text>
-              {index === yCount ? (
-                xCoordinateAxisRender(yAxis)
-              ) : (
-                <line
-                  x1={yLabelWidth}
-                  y1={yAxis}
-                  x2={width}
-                  y2={yAxis}
-                  stroke="#E1E8F7"
-                  strokeWidth="1"
-                  strokeDasharray="4, 4"
-                />
-              )}
-            </g>
-          );
-        })}
-      </g>
-    );
-  }, [
-    dataList,
-    height,
-    labelFontSize,
-    width,
-    yCount,
-    yGap,
-    yLabelPaddingRight,
-    yLabelWidth,
-    yMaxValue,
-  ]);
-
-  // 柱形
-  const barNode = useMemo(() => {
-    if (dataList.length <= 0) {
-      return null;
-    }
-    return (
-      <g>
-        {dataList.map((item) => (
-          <g key={item.label}>
-            {item.category.map((sub, subIndex) => (
-              <rect
-                key={`${item.label}_${sub.name}`}
-                rx="2"
-                x={sub.xPosition}
-                y={sub.yPosition}
-                height={sub.height}
-                width={barWidth}
-                fill={COLORS[subIndex]}
-              />
-            ))}
-          </g>
-        ))}
-      </g>
-    );
-  }, [dataList, barWidth]);
+  }, [chatData, height, id, labelFontSize, verticalAxisHeight]);
 
   return (
     <svg
@@ -293,8 +285,9 @@ export default function HistogramChart({
         </linearGradient>
       </defs>
       {/* 坐标系 */}
-      {coordinateSystemNode}
-      <g ref={gridRef} />
+      {yCoordinateAxisNode}
+      {xCoordinateAxisNode}
+      <g ref={barBgRef} />
       {barNode}
     </svg>
   );

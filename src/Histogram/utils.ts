@@ -68,7 +68,7 @@ export function generateConfig(
   };
 }
 
-export function generateData(
+export function generateChartData(
   list: DataListItem[],
   {
     horizontalAxisWidth,
@@ -79,7 +79,7 @@ export function generateData(
     barWidth,
   }: HistogramGenerateDataConfigType,
 ): HistogramChartDataListItem[] {
-  const dList: HistogramChartDataListItem[] = [];
+  const charData: HistogramChartDataListItem[] = [];
   const len = list.length;
   // 平分横向坐标宽度
   const averageWidth = horizontalAxisWidth / list.length;
@@ -105,10 +105,15 @@ export function generateData(
       throw new Error('value必须为对象或者数组');
     }
 
-    // 网格宽度
-    const gridWidth = valueArr.length * (barGap + barWidth) + barGap;
-    // 绘制每个x点的柱形的起始点
-    const barInitialX = tickPosition - gridWidth / 2 + barGap;
+    // 同一组中，第一个柱形起始点 到 最后柱形终止点的宽度
+    const barGroupWidth = valueArr.length * (barGap + barWidth) - barGap;
+    // hover时柱形的背景色宽度
+    const barBackgroundWidth = Math.min(
+      averageWidth,
+      barGroupWidth + Math.floor(barGroupWidth / 2),
+    );
+    // 绘制同一组第一个柱形的起始点
+    const barInitialX = tickPosition - barGroupWidth / 2;
 
     category = valueArr.map((v, index) => {
       // 计算柱形高度
@@ -125,12 +130,12 @@ export function generateData(
       };
     });
 
-    dList.push({
+    charData.push({
       tickPosition,
-      gridWidth,
+      barBackgroundWidth,
       category,
       label: item.label,
     });
   }
-  return dList;
+  return charData;
 }
