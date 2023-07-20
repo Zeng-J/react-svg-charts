@@ -14,6 +14,7 @@ export default () => (
       { label: '2022', value: { name: '参与人数', value: 20 } },
     ]}
     config={{
+      autoFit: false,
       width: 400,
       height: 400,
     }}
@@ -203,7 +204,7 @@ export default () => {
 
 | 参数               | 说明                                           | 类型     | 默认值         |
 | ------------------ | ---------------------------------------------- | -------- | -------------- |
-| autoFit            | 是否自动适应容器大小                           | boolean  | false          |
+| autoFit            | 是否自动适应容器大小                           | boolean  | true           |
 | height             | 高度                                           | number   | 640            |
 | width              | 宽度                                           | number   | 480            |
 | labelFontSize      | 标签字体大小                                   | number   | 12             |
