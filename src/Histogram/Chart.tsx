@@ -41,6 +41,7 @@ export default function HistogramChart({
     labelFontSize,
     yLabelPaddingRight,
     colors,
+    coordinateLeftTopY,
   } = generateConfig(config, {
     dataTotal: data.length,
     groupTotal: Array.isArray(data[0]?.value) ? data[0]?.value.length : 1,
@@ -55,6 +56,7 @@ export default function HistogramChart({
         yLabelWidth,
         barGap,
         barWidth,
+        coordinateLeftTopY,
       }),
     [
       JSON.stringify(data),
@@ -81,7 +83,10 @@ export default function HistogramChart({
     return {
       x,
       y,
-      isWithin: x > yLabelWidth && y > 0 && y < verticalAxisHeight,
+      isWithin:
+        x > yLabelWidth &&
+        y > coordinateLeftTopY &&
+        y < coordinateLeftTopY + verticalAxisHeight,
       clientX,
       clientY,
     };
@@ -108,7 +113,7 @@ export default function HistogramChart({
           barBgRef.current.innerHTML = `
           <rect
             x="${x - wid / 2}"
-            y="0"
+            y="${coordinateLeftTopY}"
             height="${verticalAxisHeight}"
             width="${wid}"
             fill="url(#${RECT_BG_PREFIX}${id})"
@@ -118,7 +123,7 @@ export default function HistogramChart({
         barBgRef.current?.setAttribute('style', 'visibility: visible;');
       }
     },
-    [id, verticalAxisHeight],
+    [id, verticalAxisHeight, coordinateLeftTopY],
   );
   const handleHiddenAccessory = useCallback(() => {
     barBgRef.current?.setAttribute('style', 'visibility: hidden;');
@@ -241,8 +246,8 @@ export default function HistogramChart({
             <line
               x1={item.tickPosition}
               x2={item.tickPosition}
-              y1={verticalAxisHeight}
-              y2={verticalAxisHeight + 6}
+              y1={verticalAxisHeight + coordinateLeftTopY}
+              y2={verticalAxisHeight + coordinateLeftTopY + 6}
               stroke="#E1E8F7"
               strokeWidth="1"
             />

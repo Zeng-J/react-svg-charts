@@ -26,6 +26,10 @@ export interface HistogramConstantType extends Required<HistogramConfigType> {
   verticalAxisHeight: number;
   /** y轴刻度之间的间距 */
   yGap: number;
+  /** 坐标系左上角的x坐标 */
+  coordinateLeftTopX: number;
+  /** 坐标系左上角的y坐标 */
+  coordinateLeftTopY: number;
 }
 
 export type HistogramGenerateDataConfigType = Pick<
@@ -36,4 +40,5 @@ export type HistogramGenerateDataConfigType = Pick<
   | 'yLabelWidth'
   | 'barGap'
   | 'barWidth'
+  | 'coordinateLeftTopY'
 >;

@@ -33,9 +33,14 @@ export function generateConfig(
   config: HistogramConfigType,
   extra: DataTotalType,
 ): HistogramConstantType {
+  const coordinateLeftTopX = config.yLabelWidth;
+  const coordinateLeftTopY = config.labelFontSize / 2;
   const verticalAxisHeight =
-    config.height - config.labelFontSize - config.xLabelPaddingTop;
-  const horizontalAxisWidth = config.width - config.yLabelWidth;
+    config.height -
+    coordinateLeftTopY -
+    config.labelFontSize -
+    config.xLabelPaddingTop;
+  const horizontalAxisWidth = config.width - coordinateLeftTopX;
 
   const barWidth =
     config.barWidth ??
@@ -48,9 +53,11 @@ export function generateConfig(
   return {
     ...config,
     barWidth,
+    coordinateLeftTopX,
+    coordinateLeftTopY,
     horizontalAxisWidth,
     verticalAxisHeight,
-    yGap: (verticalAxisHeight - config.labelFontSize / 2) / config.yCount,
+    yGap: verticalAxisHeight / config.yCount,
   };
 }
 
@@ -63,6 +70,7 @@ export function generateChartData(
     yLabelWidth,
     barGap,
     barWidth,
+    coordinateLeftTopY,
   }: HistogramGenerateDataConfigType,
 ): HistogramChartDataListItem[] {
   const charData: HistogramChartDataListItem[] = [];
@@ -106,7 +114,7 @@ export function generateChartData(
       const barHeight = (v.value / yMaxValue) * verticalAxisHeight;
       // xPosition、yPosition是柱形左上角的坐标点
       const xPosition = barInitialX + index * (barGap + barWidth);
-      const yPosition = verticalAxisHeight - barHeight;
+      const yPosition = coordinateLeftTopY + verticalAxisHeight - barHeight;
 
       return {
         ...v,
