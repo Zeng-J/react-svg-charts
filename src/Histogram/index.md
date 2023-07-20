@@ -29,7 +29,7 @@ import { Histogram } from 'react-svg-charts';
 
 export default () => {
   return (
-    <>
+    <div style={{ height: 300 }}>
       <Histogram
         data={[
           {
@@ -168,11 +168,10 @@ export default () => {
         ]}
         config={{
           autoFit: true,
-          height: 300,
           colors: ['#00BFFF', '#FF0000'],
         }}
       />
-    </>
+    </div>
   );
 };
 ```
@@ -202,17 +201,17 @@ export default () => {
 
 ### HistogramConfig
 
-| 参数               | 说明                                           | 类型     | 默认值         |
-| ------------------ | ---------------------------------------------- | -------- | -------------- |
-| autoFit            | 是否自动适应容器大小                           | boolean  | true           |
-| height             | 高度                                           | number   | 640            |
-| width              | 宽度                                           | number   | 480            |
-| labelFontSize      | 标签字体大小                                   | number   | 12             |
-| yLabelWidth        | y 轴 label 宽度                                | number   | 36             |
-| yLabelPaddingRight | y 轴 label 的右边距                            | number   | 8              |
-| xLabelPaddingTop   | x 轴 label 的上边距                            | number   | 8              |
-| yMaxValue          | y 轴最大值                                     | number   | 100            |
-| yCount             | y 轴显示多少条刻度线                           | number   | 5              |
-| barWidth           | y 柱形条宽度，一般不需要手动传入，会自动计算   | number   |                |
-| barGap             | y 同一组的柱形条间距（多组柱形图才会用到这个） | number   | 4              |
-| colors             | 柱形颜色                                       | string[] | [#a6cee3, ...] |
+| 参数               | 说明                                                     | 类型     | 默认值         |
+| ------------------ | -------------------------------------------------------- | -------- | -------------- |
+| autoFit            | 是否自动适应容器大小（为 ture 时，width 和 height 失效） | boolean  | true           |
+| height             | 高度                                                     | number   | 640            |
+| width              | 宽度                                                     | number   | 480            |
+| labelFontSize      | 标签字体大小                                             | number   | 12             |
+| yLabelWidth        | y 轴 label 宽度                                          | number   | 36             |
+| yLabelPaddingRight | y 轴 label 的右边距                                      | number   | 8              |
+| xLabelPaddingTop   | x 轴 label 的上边距                                      | number   | 8              |
+| yMaxValue          | y 轴最大值                                               | number   | 100            |
+| yCount             | y 轴显示多少条刻度线                                     | number   | 5              |
+| barWidth           | y 柱形条宽度，一般不需要手动传入，会自动计算             | number   |                |
+| barGap             | y 同一组的柱形条间距（多组柱形图才会用到这个）           | number   | 4              |
+| colors             | 柱形颜色                                                 | string[] | [#a6cee3, ...] |

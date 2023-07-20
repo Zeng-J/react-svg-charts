@@ -58,7 +58,9 @@ export default function HistogramChart({
         barWidth,
         coordinateLeftTopY,
       }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       JSON.stringify(data),
       horizontalAxisWidth,
       yMaxValue,
@@ -66,6 +68,7 @@ export default function HistogramChart({
       yLabelWidth,
       barGap,
       barWidth,
+      coordinateLeftTopY,
     ],
   );
 
@@ -173,7 +176,7 @@ export default function HistogramChart({
     return (
       <g>
         {yLineList.map((val, index) => {
-          const yAxis = index * yGap + labelFontSize / 2;
+          const yAxis = index * yGap + coordinateLeftTopY;
           return (
             <g key={val}>
               <text
@@ -202,6 +205,7 @@ export default function HistogramChart({
       </g>
     );
   }, [
+    coordinateLeftTopY,
     labelFontSize,
     width,
     yCount,
@@ -235,6 +239,7 @@ export default function HistogramChart({
         ))}
       </g>
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatData, barWidth]);
 
   // x轴坐标系
@@ -265,7 +270,7 @@ export default function HistogramChart({
         ))}
       </g>
     );
-  }, [chatData, height, labelFontSize, verticalAxisHeight]);
+  }, [chatData, coordinateLeftTopY, height, labelFontSize, verticalAxisHeight]);
 
   return (
     <svg

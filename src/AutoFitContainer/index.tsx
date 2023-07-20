@@ -33,8 +33,8 @@ function AutoFitContainer(props: AutoFitContainerProps) {
   }>(
     autoFit
       ? {
-          width: externalWidth ?? 0,
-          height: externalHeight ?? 0,
+          width: 0,
+          height: 0,
         }
       : {
           width: externalWidth ?? 640,
@@ -50,12 +50,7 @@ function AutoFitContainer(props: AutoFitContainerProps) {
           return;
         }
         const size = getContainerSize(element);
-        setContainerSize({
-          ...size,
-          // 如果用户还有设置高度，以用户的为准。宽度自适应即可
-          height:
-            typeof externalHeight === 'number' ? externalHeight : size.height,
-        });
+        setContainerSize(size);
       });
     }
   }, [autoFit, externalHeight]);
