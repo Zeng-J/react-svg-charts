@@ -19,20 +19,18 @@ const RECT_BG_PREFIX = 'rsc-histogram_gridBg_';
 
 export interface HistogramChartProps {
   data: DataListItem[];
-  config?: Partial<HistogramConfigType>;
-  width: number;
-  height: number;
+  config: HistogramConfigType;
   containerRef: RefObject<HTMLDivElement>;
 }
 
 export default function HistogramChart({
   data,
-  config = {},
-  width,
-  height,
+  config,
   containerRef,
 }: HistogramChartProps) {
   const {
+    width,
+    height,
     horizontalAxisWidth,
     yMaxValue,
     verticalAxisHeight,
@@ -43,17 +41,10 @@ export default function HistogramChart({
     yGap,
     labelFontSize,
     yLabelPaddingRight,
-  } = generateConfig(
-    {
-      ...config,
-      width,
-      height,
-    },
-    {
-      dataTotal: data.length,
-      groupTotal: Array.isArray(data[0]?.value) ? data[0]?.value.length : 1,
-    },
-  );
+  } = generateConfig(config, {
+    dataTotal: data.length,
+    groupTotal: Array.isArray(data[0]?.value) ? data[0]?.value.length : 1,
+  });
 
   const chatData = useMemo(
     () =>

@@ -8,17 +8,6 @@ import type {
   HistogramGenerateDataConfigType,
 } from './data';
 
-const defaultConfig = {
-  labelFontSize: 12,
-  yLabelWidth: 36,
-  yLabelPaddingRight: 8,
-  xLabelPaddingTop: 8,
-  yMaxValue: 100,
-  yCount: 5,
-  barGap: 4,
-  autoFit: false,
-};
-
 interface DataTotalType {
   /** 数据条数，也表示x轴的坐标数 */
   dataTotal: number;
@@ -41,23 +30,20 @@ function calcBarWidth({
 }
 
 export function generateConfig(
-  options: Partial<HistogramConfigType> &
-    Pick<HistogramConfigType, 'width' | 'height'>,
+  config: HistogramConfigType,
   extra: DataTotalType,
 ): HistogramConstantType {
-  const config = {
-    ...defaultConfig,
-    ...options,
-  };
   const verticalAxisHeight =
     config.height - config.labelFontSize - config.xLabelPaddingTop;
   const horizontalAxisWidth = config.width - config.yLabelWidth;
 
-  const barWidth = calcBarWidth({
-    ...extra,
-    horizontalAxisWidth,
-    barGap: config.barGap,
-  });
+  const barWidth =
+    config.barWidth ??
+    calcBarWidth({
+      ...extra,
+      horizontalAxisWidth,
+      barGap: config.barGap,
+    });
 
   return {
     ...config,

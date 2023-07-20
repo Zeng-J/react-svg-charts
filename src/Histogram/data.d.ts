@@ -14,12 +14,12 @@ export interface HistogramChartDataListItem
 
 export interface HistogramConfigType extends CommonConfigType {
   /** 柱形条宽度，一般不需要手动传入，会自动计算 */
-  barWidth: number;
+  barWidth?: number;
   /** 同一组的柱形条间距（多组柱形图才会用到这个） */
   barGap: number;
 }
 
-export interface HistogramConstantType extends HistogramConfigType {
+export interface HistogramConstantType extends Required<HistogramConfigType> {
   /** 横向坐标系宽度（除了label占用宽度） */
   horizontalAxisWidth: number;
   /** 纵向坐标系的高度（除了label占用高度） */

@@ -1,26 +1,41 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { bind } from 'size-sensor';
+import type { DataListItem } from '../data';
 import { getContainerSize } from '../utils';
-import type { HistogramChartProps } from './Chart';
 import HistogramChart from './Chart';
+import type { HistogramConfigType } from './data';
 
-export type HistogramProps = Pick<HistogramChartProps, 'data' | 'config'>;
+export type HistogramProps = {
+  data: DataListItem[];
+  config?: Partial<HistogramConfigType>;
+};
+
+const DEFAULT_CONFIG = {
+  labelFontSize: 12,
+  yLabelWidth: 36,
+  yLabelPaddingRight: 8,
+  xLabelPaddingTop: 8,
+  yMaxValue: 100,
+  yCount: 5,
+  barGap: 4,
+  autoFit: true,
+};
 
 function Histogram({ data, config = {} }: HistogramProps) {
   const { width: externalWidth, height: externalHeight, autoFit } = config;
   const containerRef = useRef<HTMLDivElement>(null);
   const [{ width, height }, setContainerSize] = useState<{
-    width?: number;
-    height?: number;
+    width: number;
+    height: number;
   }>(
     autoFit
       ? {
-          width: externalWidth,
-          height: externalHeight,
+          width: externalWidth ?? 0,
+          height: externalHeight ?? 0,
         }
       : {
-          width: typeof externalWidth === 'number' ? externalWidth : 640,
-          height: typeof externalHeight === 'number' ? externalHeight : 480,
+          width: externalWidth ?? 640,
+          height: externalHeight ?? 480,
         },
   );
 
@@ -49,10 +64,13 @@ function Histogram({ data, config = {} }: HistogramProps) {
     return (
       <HistogramChart
         data={data}
-        config={config}
+        config={{
+          ...DEFAULT_CONFIG,
+          ...config,
+          width,
+          height,
+        }}
         containerRef={containerRef}
-        width={width}
-        height={height}
       />
     );
   };
