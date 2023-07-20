@@ -53,7 +53,7 @@ function AutoFitContainer(props: AutoFitContainerProps) {
         setContainerSize(size);
       });
     }
-  }, [autoFit, externalHeight]);
+  }, [autoFit]);
 
   const svgRender = () => {
     if (!width || !height) {
