@@ -6,9 +6,9 @@ import React, {
   useRef,
 } from 'react';
 import useSquareChartTooltips from 'react-svg-charts/hooks/useSquareChartTooltips';
-import useThrottle from 'react-svg-charts/hooks/useThrottle';
 
 import { COLORS } from 'react-svg-charts/constants';
+import useThrottle from 'react-svg-charts/hooks/useThrottle';
 import type { DataListItem } from '../data';
 import { whereIsArea } from '../utils';
 import type { HistogramConfigType } from './data';
@@ -84,12 +84,15 @@ export default function HistogramChart({
   // 判断鼠标是否在坐标系内
   const isWithinOrNot = (e: MouseEvent) => {
     const rect = e.currentTarget?.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const { clientX, clientY } = e;
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
     return {
       x,
       y,
       isWithin: x > yLabelWidth && y > 0 && y < verticalAxisHeight,
+      clientX,
+      clientY,
     };
   };
 
@@ -129,34 +132,34 @@ export default function HistogramChart({
     barBgRef.current?.setAttribute('style', 'visibility: hidden;');
   }, []);
 
-  const handleShowAccessory = useThrottle(
-    (x: number) => {
-      const index = whereIsArea(
-        x,
-        yLabelWidth,
-        horizontalAxisWidth / data.length,
-      );
-      const currentItem = chatData[index];
-      if (currentItem) {
-        // 柱形背景色绘制
-        barBgRender(currentItem.tickPosition, currentItem.barBackgroundWidth);
+  const handleShowAccessory = (x: number) => {
+    const index = whereIsArea(
+      x,
+      yLabelWidth,
+      horizontalAxisWidth / data.length,
+    );
+    const currentItem = chatData[index];
+    if (currentItem) {
+      // 柱形背景色绘制
+      barBgRender(currentItem.tickPosition, currentItem.barBackgroundWidth);
+    } else {
+      handleHiddenAccessory();
+    }
+  };
+
+  const handleMouseMove = useThrottle(
+    (e: MouseEvent) => {
+      const { x, clientX, clientY, isWithin } = isWithinOrNot(e);
+      if (isWithin) {
+        handleShowAccessory(x);
+        handleShowTooltips(x, clientX, clientY);
       } else {
         handleHiddenAccessory();
+        handleHiddenTooltips();
       }
     },
     { wait: 50, trailing: false },
   );
-
-  const handleMouseMove = (e: MouseEvent) => {
-    const { x, y, isWithin } = isWithinOrNot(e);
-    if (isWithin) {
-      handleShowAccessory.run(x);
-      handleShowTooltips.run(x, y);
-    } else {
-      handleHiddenAccessory();
-      handleHiddenTooltips();
-    }
-  };
   const handleMouseLeave = () => {
     handleHiddenAccessory();
     handleHiddenTooltips();
@@ -171,7 +174,7 @@ export default function HistogramChart({
       (_, i) => yMaxValue - yUnit * i,
     );
     return (
-      <g id={`histogram-y-coordinate-${id}`}>
+      <g>
         {yLineList.map((val, index) => {
           const yAxis = index * yGap + labelFontSize / 2;
           return (
@@ -202,7 +205,6 @@ export default function HistogramChart({
       </g>
     );
   }, [
-    id,
     labelFontSize,
     width,
     yCount,
@@ -241,7 +243,7 @@ export default function HistogramChart({
   // x轴坐标系
   const xCoordinateAxisNode = useMemo(() => {
     return (
-      <g id={`histogram-x-coordinate-axis-${id}`}>
+      <g>
         {chatData.map((item) => (
           <g key={item.tickPosition}>
             <line
@@ -266,13 +268,13 @@ export default function HistogramChart({
         ))}
       </g>
     );
-  }, [chatData, height, id, labelFontSize, verticalAxisHeight]);
+  }, [chatData, height, labelFontSize, verticalAxisHeight]);
 
   return (
     <svg
       width={width}
       height={height}
-      onMouseMove={handleMouseMove}
+      onMouseMove={handleMouseMove.run}
       onMouseLeave={handleMouseLeave}
     >
       <defs>
