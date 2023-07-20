@@ -1,5 +1,4 @@
 import { RefObject, useCallback, useRef } from 'react';
-import { COLORS } from 'react-svg-charts/constants';
 import { whereIsArea } from 'react-svg-charts/utils';
 
 import type { CommonChartDataListItem } from 'react-svg-charts/data';
@@ -9,6 +8,7 @@ interface UseSquareChartTooltipsProps<T> {
   offestX: number;
   horizontalAxisWidth: number;
   data: T[];
+  colors: string[];
 }
 
 const TOOLTIPS_CLASS_PREFIX = 'rsc-tooltips';
@@ -21,6 +21,7 @@ export default function useSquareChartTooltips<
   containerRef,
   offestX,
   horizontalAxisWidth,
+  colors,
 }: UseSquareChartTooltipsProps<T>) {
   const tooltipsRef = useRef<HTMLDivElement>();
   const handleHiddenTooltips = useCallback(() => {
@@ -59,7 +60,7 @@ export default function useSquareChartTooltips<
                     ${currentItem.category
                       .map(
                         (c, i) => `
-                      <li class="${TOOLTIPS_CLASS_PREFIX}-list-item" style="color: ${COLORS[i]};">
+                      <li class="${TOOLTIPS_CLASS_PREFIX}-list-item" style="color: ${colors[i]};">
                         <span class="${TOOLTIPS_CLASS_PREFIX}-label">${c.name}：</span>
                         <span class="${TOOLTIPS_CLASS_PREFIX}-val">${c.value}</span>
                       </li>

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { COLORS } from 'react-svg-charts/constants';
 import { bind } from 'size-sensor';
 import type { DataListItem } from '../data';
 import { getContainerSize } from '../utils';
@@ -19,6 +20,7 @@ const DEFAULT_CONFIG = {
   yCount: 5,
   barGap: 4,
   autoFit: true,
+  colors: COLORS,
 };
 
 function Histogram({ data, config = {} }: HistogramProps) {

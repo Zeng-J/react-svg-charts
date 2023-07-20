@@ -29,6 +29,7 @@ export type CommonConfigType = {
   yCount: number;
   /** 自动取图表容器的宽高 */
   autoFit: boolean;
+  colors: string[];
 };
 
 // 内部处理后的图表数据类型

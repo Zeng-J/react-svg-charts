@@ -7,7 +7,6 @@ import React, {
 } from 'react';
 import useSquareChartTooltips from 'react-svg-charts/hooks/useSquareChartTooltips';
 
-import { COLORS } from 'react-svg-charts/constants';
 import useThrottle from 'react-svg-charts/hooks/useThrottle';
 import type { DataListItem } from '../data';
 import { whereIsArea } from '../utils';
@@ -41,6 +40,7 @@ export default function HistogramChart({
     yGap,
     labelFontSize,
     yLabelPaddingRight,
+    colors,
   } = generateConfig(config, {
     dataTotal: data.length,
     groupTotal: Array.isArray(data[0]?.value) ? data[0]?.value.length : 1,
@@ -93,6 +93,7 @@ export default function HistogramChart({
     horizontalAxisWidth,
     offestX: yLabelWidth,
     containerRef,
+    colors,
   });
 
   // hover显示柱形背景色
@@ -222,7 +223,7 @@ export default function HistogramChart({
                 y={sub.yPosition}
                 height={sub.height}
                 width={barWidth}
-                fill={COLORS[subIndex]}
+                fill={colors[subIndex]}
               />
             ))}
           </g>
