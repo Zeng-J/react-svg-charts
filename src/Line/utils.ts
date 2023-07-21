@@ -8,25 +8,10 @@ import type {
   LineGenerateDataConfigType,
 } from './data';
 
-export function generateConfig(config: LineConfigType): LineConstantType {
-  // todo 抽离
-  const coordinateLeftTopX = config.yLabelWidth;
-  const coordinateLeftTopY = config.labelFontSize / 2;
-  const verticalAxisHeight =
-    config.height -
-    coordinateLeftTopY -
-    config.labelFontSize -
-    config.xLabelPaddingTop;
-  const horizontalAxisWidth = config.width - coordinateLeftTopX;
+import { generateConfigOfRectangular } from '../utils/rect';
 
-  return {
-    ...config,
-    coordinateLeftTopX,
-    coordinateLeftTopY,
-    horizontalAxisWidth,
-    verticalAxisHeight,
-    yGap: verticalAxisHeight / config.yCount,
-  };
+export function generateConfig(config: LineConfigType): LineConstantType {
+  return generateConfigOfRectangular(config);
 }
 
 export function generateChartData(
