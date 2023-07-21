@@ -53,22 +53,20 @@ export default function useSquareChartTooltips<
         dataset.lastIndex = String(index);
 
         tooltipsRef.current.innerHTML = `
-                <div class="${TOOLTIPS_CLASS_PREFIX}-title">${
-          currentItem.label
-        }</div>
-                  <ul class="${TOOLTIPS_CLASS_PREFIX}-list">
-                    ${currentItem.category
-                      .map(
-                        (c, i) => `
-                      <li class="${TOOLTIPS_CLASS_PREFIX}-list-item" style="color: ${colors[i]};">
-                        <span class="${TOOLTIPS_CLASS_PREFIX}-label">${c.name}：</span>
-                        <span class="${TOOLTIPS_CLASS_PREFIX}-val">${c.value}</span>
-                      </li>
-                    `,
-                      )
-                      .join('')}
-                  </ul>
-                `;
+        <div class="${TOOLTIPS_CLASS_PREFIX}-title">${currentItem.label}</div>
+        <ul class="${TOOLTIPS_CLASS_PREFIX}-list">
+          ${currentItem.category
+            .map(
+              (c, i) => `
+              <li class="${TOOLTIPS_CLASS_PREFIX}-list-item" style="color: ${colors[i]};">
+                <span class="${TOOLTIPS_CLASS_PREFIX}-label">${c.name}：</span>
+                <span class="${TOOLTIPS_CLASS_PREFIX}-val">${c.value}</span>
+              </li>
+            `,
+            )
+            .join('')}
+        </ul>
+        `;
       }
 
       const { scrollWidth } = containerRef.current;
