@@ -8,6 +8,7 @@ import React, {
 import useSquareChartTooltips from 'react-svg-charts/hooks/useSquareChartTooltips';
 
 import useThrottle from 'react-svg-charts/hooks/useThrottle';
+import RectangularCoordinateSystem from 'react-svg-charts/RectangularCoordinateSystem';
 import {
   isWithinOrNotOfRectangular,
   whereIsAreaOfRectangular,
@@ -27,9 +28,14 @@ export interface HistogramChartProps {
 
 export default function HistogramChart({
   data,
-  config,
+  config: externalConfig,
   containerRef,
 }: HistogramChartProps) {
+  const config = generateConfig(externalConfig, {
+    dataTotal: data.length,
+    groupTotal: Array.isArray(data[0]?.value) ? data[0]?.value.length : 1,
+  });
+
   const {
     width,
     height,
@@ -39,19 +45,12 @@ export default function HistogramChart({
     yLabelWidth,
     barGap,
     barWidth,
-    yCount,
-    yGap,
-    labelFontSize,
-    yLabelPaddingRight,
     colors,
     coordinateLeftTopX,
     coordinateLeftTopY,
-  } = generateConfig(config, {
-    dataTotal: data.length,
-    groupTotal: Array.isArray(data[0]?.value) ? data[0]?.value.length : 1,
-  });
+  } = config;
 
-  const chatData = useMemo(
+  const chartData = useMemo(
     () =>
       generateChartData(data, {
         horizontalAxisWidth,
@@ -83,7 +82,7 @@ export default function HistogramChart({
 
   // 提示窗
   const { handleHiddenTooltips, handleShowTooltips } = useSquareChartTooltips({
-    data: chatData,
+    data: chartData,
     horizontalAxisWidth,
     offestX: yLabelWidth,
     containerRef,
@@ -124,7 +123,7 @@ export default function HistogramChart({
       yLabelWidth,
       horizontalAxisWidth / data.length,
     );
-    const currentItem = chatData[index];
+    const currentItem = chartData[index];
     if (currentItem) {
       // 柱形背景色绘制
       barBgRender(currentItem.tickPosition, currentItem.barBackgroundWidth);
@@ -155,64 +154,14 @@ export default function HistogramChart({
     handleHiddenTooltips();
   };
 
-  // y轴坐标系
-  const yCoordinateAxisNode = useMemo(() => {
-    // 刻度线单位值
-    const yUnit = yMaxValue / yCount;
-    // y轴刻度线
-    const yLineList = Array.from({ length: yCount + 1 }).map(
-      (_, i) => yMaxValue - yUnit * i,
-    );
-    return (
-      <g>
-        {yLineList.map((val, index) => {
-          const yAxis = index * yGap + coordinateLeftTopY;
-          return (
-            <g key={val}>
-              <text
-                x={yLabelWidth - yLabelPaddingRight}
-                y={yAxis}
-                fill="#828B94"
-                fontSize={labelFontSize}
-                dominantBaseline="central"
-                style={{ textAnchor: 'end' }}
-              >
-                {val}
-              </text>
-              <line
-                x1={yLabelWidth}
-                y1={yAxis}
-                x2={width}
-                y2={yAxis}
-                stroke="#E1E8F7"
-                strokeWidth="1"
-                // x轴线为实线，其他为虚线
-                strokeDasharray={index !== yCount ? '4, 4' : undefined}
-              />
-            </g>
-          );
-        })}
-      </g>
-    );
-  }, [
-    coordinateLeftTopY,
-    labelFontSize,
-    width,
-    yCount,
-    yGap,
-    yLabelPaddingRight,
-    yLabelWidth,
-    yMaxValue,
-  ]);
-
   // 柱形
   const barNode = useMemo(() => {
-    if (chatData.length <= 0) {
+    if (chartData.length <= 0) {
       return null;
     }
     return (
       <g>
-        {chatData.map((item) => (
+        {chartData.map((item) => (
           <g key={item.label}>
             {item.category.map((sub, subIndex) => (
               <rect
@@ -230,37 +179,7 @@ export default function HistogramChart({
       </g>
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chatData, barWidth]);
-
-  // x轴坐标系
-  const xCoordinateAxisNode = useMemo(() => {
-    return (
-      <g>
-        {chatData.map((item) => (
-          <g key={item.tickPosition}>
-            <line
-              x1={item.tickPosition}
-              x2={item.tickPosition}
-              y1={verticalAxisHeight + coordinateLeftTopY}
-              y2={verticalAxisHeight + coordinateLeftTopY + 6}
-              stroke="#E1E8F7"
-              strokeWidth="1"
-            />
-            <text
-              x={item.tickPosition}
-              y={height}
-              dominantBaseline="auto"
-              fontSize={labelFontSize}
-              fill="#828b94"
-              style={{ textAnchor: 'middle' }}
-            >
-              {item.label}
-            </text>
-          </g>
-        ))}
-      </g>
-    );
-  }, [chatData, coordinateLeftTopY, height, labelFontSize, verticalAxisHeight]);
+  }, [chartData, barWidth]);
 
   return (
     <svg
@@ -279,8 +198,7 @@ export default function HistogramChart({
         </linearGradient>
       </defs>
       {/* 坐标系 */}
-      {yCoordinateAxisNode}
-      {xCoordinateAxisNode}
+      <RectangularCoordinateSystem config={config} chartData={chartData} />
       <g ref={barBgRef} />
       {barNode}
     </svg>

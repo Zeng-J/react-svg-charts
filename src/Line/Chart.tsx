@@ -6,6 +6,7 @@ import React, {
   useRef,
 } from 'react';
 import useThrottle from 'react-svg-charts/hooks/useThrottle';
+import RectangularCoordinateSystem from 'react-svg-charts/RectangularCoordinateSystem';
 import {
   isWithinOrNotOfRectangular,
   whereIsAreaOfRectangular,
@@ -22,7 +23,12 @@ interface LineChartProps {
   containerRef: RefObject<HTMLDivElement>;
 }
 
-function LineChart({ data, config, containerRef }: LineChartProps) {
+function LineChart({
+  data,
+  config: externalConfig,
+  containerRef,
+}: LineChartProps) {
+  const config = generateConfig(externalConfig);
   const {
     width,
     height,
@@ -30,16 +36,12 @@ function LineChart({ data, config, containerRef }: LineChartProps) {
     yMaxValue,
     verticalAxisHeight,
     yLabelWidth,
-    yCount,
-    yGap,
-    labelFontSize,
-    yLabelPaddingRight,
     colors,
     coordinateLeftTopX,
     coordinateLeftTopY,
-  } = generateConfig(config);
+  } = config;
 
-  const chatData = useMemo(
+  const chartData = useMemo(
     () =>
       generateChartData(data, {
         horizontalAxisWidth,
@@ -62,7 +64,7 @@ function LineChart({ data, config, containerRef }: LineChartProps) {
 
   // 提示窗
   const { handleHiddenTooltips, handleShowTooltips } = useSquareChartTooltips({
-    data: chatData,
+    data: chartData,
     horizontalAxisWidth,
     offestX: coordinateLeftTopX,
     containerRef,
@@ -134,9 +136,9 @@ function LineChart({ data, config, containerRef }: LineChartProps) {
     const index = whereIsAreaOfRectangular(
       x,
       coordinateLeftTopX,
-      horizontalAxisWidth / chatData.length,
+      horizontalAxisWidth / chartData.length,
     );
-    const currentItem = chatData[index];
+    const currentItem = chartData[index];
     if (currentItem) {
       // 辅助线绘制
       crosshairsRender(currentItem.tickPosition);
@@ -170,98 +172,17 @@ function LineChart({ data, config, containerRef }: LineChartProps) {
     handleHiddenTooltips();
   };
 
-  // todo 抽离
-  // y轴坐标系
-  const yCoordinateAxisNode = useMemo(() => {
-    // 刻度线单位值
-    const yUnit = yMaxValue / yCount;
-    // y轴刻度线
-    const yLineList = Array.from({ length: yCount + 1 }).map(
-      (_, i) => yMaxValue - yUnit * i,
-    );
-    return (
-      <g>
-        {yLineList.map((val, index) => {
-          const yAxis = index * yGap + coordinateLeftTopY;
-          return (
-            <g key={val}>
-              <text
-                x={yLabelWidth - yLabelPaddingRight}
-                y={yAxis}
-                fill="#828B94"
-                fontSize={labelFontSize}
-                dominantBaseline="central"
-                style={{ textAnchor: 'end' }}
-              >
-                {val}
-              </text>
-              <line
-                x1={yLabelWidth}
-                y1={yAxis}
-                x2={width}
-                y2={yAxis}
-                stroke="#E1E8F7"
-                strokeWidth="1"
-                // x轴线为实线，其他为虚线
-                strokeDasharray={index !== yCount ? '4, 4' : undefined}
-              />
-            </g>
-          );
-        })}
-      </g>
-    );
-  }, [
-    coordinateLeftTopY,
-    labelFontSize,
-    width,
-    yCount,
-    yGap,
-    yLabelPaddingRight,
-    yLabelWidth,
-    yMaxValue,
-  ]);
-
-  // x轴坐标系
-  const xCoordinateAxisNode = useMemo(() => {
-    return (
-      <g>
-        {chatData.map((item) => (
-          <g key={item.tickPosition}>
-            <line
-              x1={item.tickPosition}
-              x2={item.tickPosition}
-              y1={verticalAxisHeight + coordinateLeftTopY}
-              y2={verticalAxisHeight + coordinateLeftTopY + 6}
-              stroke="#E1E8F7"
-              strokeWidth="1"
-            />
-            <text
-              x={item.tickPosition}
-              y={height}
-              dominantBaseline="auto"
-              fontSize={labelFontSize}
-              fill="#828b94"
-              style={{ textAnchor: 'middle' }}
-            >
-              {item.label}
-            </text>
-          </g>
-        ))}
-      </g>
-    );
-  }, [chatData, coordinateLeftTopY, height, labelFontSize, verticalAxisHeight]);
-
   const pathLineNode = useMemo(() => {
-    if (chatData.length <= 0) {
+    if (chartData.length <= 0) {
       return null;
     }
-    const { category } = chatData[0];
+    const { category } = chartData[0];
     return (
       <g>
         {category.map((c, index: number) => (
           <path
             key={`${index}_${c.name}`}
-            d={chatData.map((item) => item.category[index].d).join('')}
+            d={chartData.map((item) => item.category[index].d).join('')}
             stroke={colors[index]}
             fill="none"
             strokeWidth="2"
@@ -271,7 +192,7 @@ function LineChart({ data, config, containerRef }: LineChartProps) {
         ))}
       </g>
     );
-  }, [chatData]);
+  }, [chartData]);
 
   return (
     <svg
@@ -281,8 +202,7 @@ function LineChart({ data, config, containerRef }: LineChartProps) {
       onMouseLeave={handleMouseLeave}
     >
       {/* 坐标系 */}
-      {yCoordinateAxisNode}
-      {xCoordinateAxisNode}
+      <RectangularCoordinateSystem config={config} chartData={chartData} />
       {/* 辅助线 */}
       <g ref={crosshairsRef} />
       {pathLineNode}
