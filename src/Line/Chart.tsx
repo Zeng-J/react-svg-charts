@@ -6,11 +6,14 @@ import React, {
   useRef,
 } from 'react';
 import useThrottle from 'react-svg-charts/hooks/useThrottle';
+import {
+  isWithinOrNotOfRectangular,
+  whereIsAreaOfRectangular,
+} from 'react-svg-charts/utils/rect';
 import type { DataListItem } from '../data';
 import useSquareChartTooltips from '../hooks/useSquareChartTooltips';
 import type { LineChartDataListItem, LineConfigType } from './data';
 
-import { whereIsArea } from '../utils';
 import { generateChartData, generateConfig } from './utils';
 
 interface LineChartProps {
@@ -56,25 +59,6 @@ function LineChart({ data, config, containerRef }: LineChartProps) {
       coordinateLeftTopY,
     ],
   );
-
-  // todo 抽离
-  // 判断鼠标是否在坐标系内
-  const isWithinOrNot = (e: MouseEvent) => {
-    const rect = e.currentTarget?.getBoundingClientRect();
-    const { clientX, clientY } = e;
-    const x = clientX - rect.left;
-    const y = clientY - rect.top;
-    return {
-      x,
-      y,
-      isWithin:
-        x > coordinateLeftTopX &&
-        y > coordinateLeftTopY &&
-        y < coordinateLeftTopY + verticalAxisHeight,
-      clientX,
-      clientY,
-    };
-  };
 
   // 提示窗
   const { handleHiddenTooltips, handleShowTooltips } = useSquareChartTooltips({
@@ -147,7 +131,7 @@ function LineChart({ data, config, containerRef }: LineChartProps) {
   }, []);
 
   const handleShowAccessory = (x: number) => {
-    const index = whereIsArea(
+    const index = whereIsAreaOfRectangular(
       x,
       coordinateLeftTopX,
       horizontalAxisWidth / chatData.length,
@@ -165,7 +149,11 @@ function LineChart({ data, config, containerRef }: LineChartProps) {
 
   const handleMouseMove = useThrottle(
     (e: MouseEvent) => {
-      const { x, clientX, clientY, isWithin } = isWithinOrNot(e);
+      const { x, clientX, clientY, isWithin } = isWithinOrNotOfRectangular(e, {
+        coordinateLeftTopX,
+        coordinateLeftTopY,
+        verticalAxisHeight,
+      });
       if (isWithin) {
         handleShowAccessory(x);
         handleShowTooltips(x, clientX, clientY);

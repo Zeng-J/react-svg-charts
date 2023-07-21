@@ -8,8 +8,11 @@ import React, {
 import useSquareChartTooltips from 'react-svg-charts/hooks/useSquareChartTooltips';
 
 import useThrottle from 'react-svg-charts/hooks/useThrottle';
+import {
+  isWithinOrNotOfRectangular,
+  whereIsAreaOfRectangular,
+} from 'react-svg-charts/utils/rect';
 import type { DataListItem } from '../data';
-import { whereIsArea } from '../utils';
 import type { HistogramConfigType } from './data';
 import { generateChartData, generateConfig } from './utils';
 
@@ -41,6 +44,7 @@ export default function HistogramChart({
     labelFontSize,
     yLabelPaddingRight,
     colors,
+    coordinateLeftTopX,
     coordinateLeftTopY,
   } = generateConfig(config, {
     dataTotal: data.length,
@@ -76,24 +80,6 @@ export default function HistogramChart({
     idCounter += 1;
     return idCounter;
   }, []);
-
-  // 判断鼠标是否在坐标系内
-  const isWithinOrNot = (e: MouseEvent) => {
-    const rect = e.currentTarget?.getBoundingClientRect();
-    const { clientX, clientY } = e;
-    const x = clientX - rect.left;
-    const y = clientY - rect.top;
-    return {
-      x,
-      y,
-      isWithin:
-        x > yLabelWidth &&
-        y > coordinateLeftTopY &&
-        y < coordinateLeftTopY + verticalAxisHeight,
-      clientX,
-      clientY,
-    };
-  };
 
   // 提示窗
   const { handleHiddenTooltips, handleShowTooltips } = useSquareChartTooltips({
@@ -133,7 +119,7 @@ export default function HistogramChart({
   }, []);
 
   const handleShowAccessory = (x: number) => {
-    const index = whereIsArea(
+    const index = whereIsAreaOfRectangular(
       x,
       yLabelWidth,
       horizontalAxisWidth / data.length,
@@ -149,7 +135,11 @@ export default function HistogramChart({
 
   const handleMouseMove = useThrottle(
     (e: MouseEvent) => {
-      const { x, clientX, clientY, isWithin } = isWithinOrNot(e);
+      const { x, clientX, clientY, isWithin } = isWithinOrNotOfRectangular(e, {
+        coordinateLeftTopX,
+        coordinateLeftTopY,
+        verticalAxisHeight,
+      });
       if (isWithin) {
         handleShowAccessory(x);
         handleShowTooltips(x, clientX, clientY);
