@@ -2,19 +2,19 @@ import React from 'react';
 import AutoFitContainer from 'react-svg-charts/AutoFitContainer';
 import { DEFAULT_CONFIG_OF_RECT } from 'react-svg-charts/constants';
 import type { DataListItem } from '../data';
-import HistogramChart from './Chart';
-import type { HistogramConfigType } from './data';
+import LineChart from './Chart';
+import type { LineConfigType } from './data';
 
-export type HistogramProps = {
+export type LineProps = {
   data: DataListItem[];
-  config?: Partial<HistogramConfigType>;
+  config?: Partial<LineConfigType>;
 };
 
-function Histogram({ data, config = {} }: HistogramProps) {
+function Line({ data, config = {} }: LineProps) {
   return (
     <AutoFitContainer config={config}>
       {({ width, height }, containerRef) => (
-        <HistogramChart
+        <LineChart
           data={data}
           config={{
             ...DEFAULT_CONFIG_OF_RECT,
@@ -29,4 +29,4 @@ function Histogram({ data, config = {} }: HistogramProps) {
   );
 }
 
-export default Histogram;
+export default Line;

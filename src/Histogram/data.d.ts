@@ -1,4 +1,9 @@
-import { CommonChartDataListItem, CommonConfigType, ValueType } from '../data';
+import {
+  CommonChartDataListItem,
+  CommonConfigType,
+  CommonRectangularConstantType,
+  ValueType,
+} from '../data';
 
 interface HistogramCategoryType extends ValueType {
   yPosition: number;
@@ -12,25 +17,18 @@ export interface HistogramChartDataListItem
   barBackgroundWidth: number;
 }
 
-export interface HistogramConfigType extends CommonConfigType {
+export interface HistogramExclusiveConfigType {
   /** 柱形条宽度，一般不需要手动传入，会自动计算 */
   barWidth?: number;
   /** 同一组的柱形条间距（多组柱形图才会用到这个） */
   barGap: number;
 }
 
-export interface HistogramConstantType extends Required<HistogramConfigType> {
-  /** 横向坐标系宽度（除了label占用宽度） */
-  horizontalAxisWidth: number;
-  /** 纵向坐标系的高度（除了label占用高度） */
-  verticalAxisHeight: number;
-  /** y轴刻度之间的间距 */
-  yGap: number;
-  /** 坐标系左上角的x坐标 */
-  coordinateLeftTopX: number;
-  /** 坐标系左上角的y坐标 */
-  coordinateLeftTopY: number;
-}
+export type HistogramConfigType = CommonConfigType &
+  HistogramExclusiveConfigType;
+
+export type HistogramConstantType = CommonRectangularConstantType &
+  Required<HistogramExclusiveConfigType>;
 
 export type HistogramGenerateDataConfigType = Pick<
   HistogramConstantType,

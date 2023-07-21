@@ -14,3 +14,16 @@ export const COLORS = [
   '#ffff99',
   '#b15928',
 ];
+
+// 直角坐标系图表的默认配置
+export const DEFAULT_CONFIG_OF_RECT = {
+  labelFontSize: 12,
+  yLabelWidth: 36,
+  yLabelPaddingRight: 8,
+  xLabelPaddingTop: 8,
+  yMaxValue: 100,
+  yCount: 5,
+  barGap: 4,
+  autoFit: true,
+  colors: COLORS,
+};

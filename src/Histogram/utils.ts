@@ -8,6 +8,8 @@ import type {
   HistogramGenerateDataConfigType,
 } from './data';
 
+import { generateConfigOfRectangular } from '../utils/rect';
+
 interface DataTotalType {
   /** 数据条数，也表示x轴的坐标数 */
   dataTotal: number;
@@ -30,34 +32,22 @@ function calcBarWidth({
 }
 
 export function generateConfig(
-  config: HistogramConfigType,
+  externalConfig: HistogramConfigType,
   extra: DataTotalType,
 ): HistogramConstantType {
-  const coordinateLeftTopX = config.yLabelWidth;
-  const coordinateLeftTopY = config.labelFontSize / 2;
-  const verticalAxisHeight =
-    config.height -
-    coordinateLeftTopY -
-    config.labelFontSize -
-    config.xLabelPaddingTop;
-  const horizontalAxisWidth = config.width - coordinateLeftTopX;
+  const config = generateConfigOfRectangular(externalConfig);
 
   const barWidth =
     config.barWidth ??
     calcBarWidth({
       ...extra,
-      horizontalAxisWidth,
+      horizontalAxisWidth: config.horizontalAxisWidth,
       barGap: config.barGap,
     });
 
   return {
     ...config,
     barWidth,
-    coordinateLeftTopX,
-    coordinateLeftTopY,
-    horizontalAxisWidth,
-    verticalAxisHeight,
-    yGap: verticalAxisHeight / config.yCount,
   };
 }
 

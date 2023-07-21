@@ -1,5 +1,5 @@
 import { RefObject, useCallback, useRef } from 'react';
-import { whereIsArea } from 'react-svg-charts/utils';
+import { whereIsAreaOfRectangular } from 'react-svg-charts/utils/rect';
 
 import type { CommonChartDataListItem } from 'react-svg-charts/data';
 
@@ -43,7 +43,11 @@ export default function useSquareChartTooltips<
     }
 
     // 判断鼠标位置鼠标位于哪个x轴刻度区域内
-    const index = whereIsArea(x, offestX, horizontalAxisWidth / data.length);
+    const index = whereIsAreaOfRectangular(
+      x,
+      offestX,
+      horizontalAxisWidth / data.length,
+    );
 
     // 显示tooltips
     const currentItem = data[index];
@@ -53,22 +57,20 @@ export default function useSquareChartTooltips<
         dataset.lastIndex = String(index);
 
         tooltipsRef.current.innerHTML = `
-                <div class="${TOOLTIPS_CLASS_PREFIX}-title">${
-          currentItem.label
-        }</div>
-                  <ul class="${TOOLTIPS_CLASS_PREFIX}-list">
-                    ${currentItem.category
-                      .map(
-                        (c, i) => `
-                      <li class="${TOOLTIPS_CLASS_PREFIX}-list-item" style="color: ${colors[i]};">
-                        <span class="${TOOLTIPS_CLASS_PREFIX}-label">${c.name}：</span>
-                        <span class="${TOOLTIPS_CLASS_PREFIX}-val">${c.value}</span>
-                      </li>
-                    `,
-                      )
-                      .join('')}
-                  </ul>
-                `;
+        <div class="${TOOLTIPS_CLASS_PREFIX}-title">${currentItem.label}</div>
+        <ul class="${TOOLTIPS_CLASS_PREFIX}-list">
+          ${currentItem.category
+            .map(
+              (c, i) => `
+              <li class="${TOOLTIPS_CLASS_PREFIX}-list-item" style="color: ${colors[i]};">
+                <span class="${TOOLTIPS_CLASS_PREFIX}-label">${c.name}：</span>
+                <span class="${TOOLTIPS_CLASS_PREFIX}-val">${c.value}</span>
+              </li>
+            `,
+            )
+            .join('')}
+        </ul>
+        `;
       }
 
       const { scrollWidth } = containerRef.current;
