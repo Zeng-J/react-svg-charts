@@ -1,7 +1,6 @@
 import React, { CSSProperties, useMemo } from 'react';
 import { CommonPolarChartDataListItem, CommonPolarConstantType } from '../data';
-
-import { generatePolarCoordinate } from 'react-svg-charts/utils/polar';
+import { generatePolarCoordinate } from '../utils/polar';
 
 interface PolarCoordinateSystemProps<T, K> {
   config: T;
@@ -12,7 +11,15 @@ export default function PolarCoordinateSystem<
   T extends CommonPolarConstantType = CommonPolarConstantType,
   K extends CommonPolarChartDataListItem = CommonPolarChartDataListItem,
 >({ config, chartData }: PolarCoordinateSystemProps<T, K>) {
-  const { yMaxValue, labelFontSize, yTicks, radius, centerX, centerY } = config;
+  const {
+    yMaxValue,
+    labelFontSize,
+    yTicks,
+    radius,
+    centerX,
+    centerY,
+    yAxisType,
+  } = config;
 
   const xtickCount = chartData.length;
 
@@ -61,31 +68,44 @@ export default function PolarCoordinateSystem<
     return (
       <g>
         {yTicks.map((yValue, index) => {
-          const y = (yValue / yMaxValue) * radius;
+          // 当前刻度的半径
+          const curTickRaius = (yValue / yMaxValue) * radius;
           return (
-            <g key={y}>
+            <g key={curTickRaius}>
               {/* 多边形描边 */}
-              {index > 0 && (
-                <polygon
-                  points={generatePolarCoordinate(
-                    Array.from({ length: xtickCount }).fill(y) as number[],
-                    centerX,
-                    centerY,
-                  )
-                    .map(
-                      ({ xPosition, yPosition }) =>
-                        `${xPosition} ${yPosition} `,
+              {index > 0 &&
+                (yAxisType === 'polygon' ? (
+                  <polygon
+                    points={generatePolarCoordinate(
+                      Array.from({ length: xtickCount }).fill(
+                        curTickRaius,
+                      ) as number[],
+                      centerX,
+                      centerY,
                     )
-                    .join('')}
-                  stroke="#E1E8F7"
-                  fill="transparent"
-                  strokeWidth="1"
-                />
-              )}
+                      .map(
+                        ({ xPosition, yPosition }) =>
+                          `${xPosition} ${yPosition} `,
+                      )
+                      .join('')}
+                    stroke="#E1E8F7"
+                    fill="none"
+                    strokeWidth="1"
+                  />
+                ) : (
+                  <circle
+                    cx={centerX}
+                    cy={centerY}
+                    r={curTickRaius}
+                    fill="none"
+                    stroke="#E1E8F7"
+                    strokeWidth="1"
+                  />
+                ))}
               {/* y轴文本 */}
               <text
                 x={centerX - 6}
-                y={centerY - y}
+                y={centerY - curTickRaius}
                 fill="#4D535C"
                 fontSize={12}
                 dominantBaseline="central"
@@ -99,7 +119,7 @@ export default function PolarCoordinateSystem<
       </g>
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [centerX, centerY, radius, yMaxValue, JSON.stringify(yTicks)]);
+  }, [centerX, centerY, radius, yMaxValue, JSON.stringify(yTicks), yAxisType]);
 
   return (
     <>

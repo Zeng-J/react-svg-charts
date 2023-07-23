@@ -82,6 +82,8 @@ export interface CommonPolarChartDataListItem<T extends ValueType = ValueType>
 export interface CommonPolarConfigType extends CommonConfigType {
   /** 图表内边距 坐标轴文本会占用 */
   padding: number;
+  /** y轴线显示成多边形还是圆形 */
+  yAxisType: 'circle' | 'polygon';
 }
 
 /** 极坐标系通用处理后的配置 */

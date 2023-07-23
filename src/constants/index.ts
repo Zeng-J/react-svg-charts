@@ -1,3 +1,5 @@
+import { CommonPolarConfigType } from 'react-svg-charts/data';
+
 // 目前最多显示12个类别，需要可以补充颜色
 // 可以考虑色板库https://www.npmjs.com/package/d3-scale-chromatic，包大小100k+
 export const COLORS = [
@@ -32,7 +34,11 @@ export const DEFAULT_CONFIG_OF_RECT = {
 };
 
 // 极坐标系图表的默认配置
-export const DEFAULT_CONFIG_OF_POLAR = {
+export const DEFAULT_CONFIG_OF_POLAR: Omit<
+  CommonPolarConfigType,
+  'width' | 'height'
+> = {
   ...COMMON_DEFAULT_CONFIG,
   padding: 36,
+  yAxisType: 'circle',
 };

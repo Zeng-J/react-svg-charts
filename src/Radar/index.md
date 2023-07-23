@@ -70,6 +70,9 @@ export default () => {
             ],
           },
         ]}
+        config={{
+          yAxisType: 'polygon',
+        }}
       />
     </div>
   );
@@ -101,13 +104,14 @@ export default () => {
 
 ### RadarConfigType
 
-| 参数          | 说明                                                     | 类型     | 默认值         |
-| ------------- | -------------------------------------------------------- | -------- | -------------- |
-| autoFit       | 是否自动适应容器大小（为 ture 时，width 和 height 失效） | boolean  | true           |
-| height        | 高度                                                     | number   | 640            |
-| width         | 宽度                                                     | number   | 480            |
-| labelFontSize | 标签字体大小                                             | number   | 12             |
-| padding       | 图表内边距 坐标轴文本会占用                              | number   | 36             |
-| yMaxValue     | y 轴最大值                                               | number   | 100            |
-| yTickCount    | y 轴显示多少条刻度线                                     | number   | 5              |
-| colors        | 柱形颜色                                                 | string[] | [#a6cee3, ...] |
+| 参数          | 说明                                                     | 类型                  | 默认值         |
+| ------------- | -------------------------------------------------------- | --------------------- | -------------- |
+| autoFit       | 是否自动适应容器大小（为 ture 时，width 和 height 失效） | boolean               | true           |
+| height        | 高度                                                     | number                | 640            |
+| width         | 宽度                                                     | number                | 480            |
+| labelFontSize | 标签字体大小                                             | number                | 12             |
+| padding       | 图表内边距 坐标轴文本会占用                              | number                | 36             |
+| yMaxValue     | y 轴最大值                                               | number                | 100            |
+| yTickCount    | y 轴显示多少条刻度线                                     | number                | 5              |
+| colors        | 柱形颜色                                                 | string[]              | [#a6cee3, ...] |
+| yAxisType     | y 轴线显示成圆形或多边形                                 | 'circle' \| 'polygon' | 'circle'       |
