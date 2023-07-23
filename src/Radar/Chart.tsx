@@ -51,11 +51,7 @@ function RadarChart({
         padding,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      JSON.stringify(data),
-      yMaxValue,
-    ],
+    [JSON.stringify(data), centerX, centerY, padding, radius, yMaxValue],
   );
 
   const crosshairsRef = useRef<SVGGElement>(null);
