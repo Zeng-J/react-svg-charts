@@ -5,7 +5,7 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
-import usePolarChartTooltips from 'react-svg-charts/hooks/usePolarChartTooltips';
+import useChartTooltips from 'react-svg-charts/hooks/useChartTooltips';
 import useThrottle from 'react-svg-charts/hooks/useThrottle';
 import PolarCoordinateSystem from 'react-svg-charts/PolarCoordinateSystem';
 import {
@@ -128,7 +128,7 @@ function RadarChart({
     }
   };
 
-  const { handleHiddenTooltips, handleShowTooltips } = usePolarChartTooltips({
+  const { handleHiddenTooltips, handleShowTooltips } = useChartTooltips({
     data: chartData,
     containerRef,
     colors,

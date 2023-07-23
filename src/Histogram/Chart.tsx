@@ -5,7 +5,7 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
-import useSquareChartTooltips from 'react-svg-charts/hooks/useSquareChartTooltips';
+import useChartTooltips from 'react-svg-charts/hooks/useChartTooltips';
 
 import useThrottle from 'react-svg-charts/hooks/useThrottle';
 import RectangularCoordinateSystem from 'react-svg-charts/RectangularCoordinateSystem';
@@ -81,10 +81,8 @@ export default function HistogramChart({
   }, []);
 
   // 提示窗
-  const { handleHiddenTooltips, handleShowTooltips } = useSquareChartTooltips({
+  const { handleHiddenTooltips, handleShowTooltips } = useChartTooltips({
     data: chartData,
-    horizontalAxisWidth,
-    offestX: yLabelWidth,
     containerRef,
     colors,
   });
@@ -117,12 +115,7 @@ export default function HistogramChart({
     barBgRef.current?.setAttribute('style', 'visibility: hidden;');
   }, []);
 
-  const handleShowAccessory = (x: number) => {
-    const index = whereIsAreaOfRectangular(
-      x,
-      yLabelWidth,
-      horizontalAxisWidth / data.length,
-    );
+  const handleShowAccessory = (index: number) => {
     const currentItem = chartData[index];
     if (currentItem) {
       // 柱形背景色绘制
@@ -140,8 +133,13 @@ export default function HistogramChart({
         verticalAxisHeight,
       });
       if (isWithin) {
-        handleShowAccessory(x);
-        handleShowTooltips(x, clientX, clientY);
+        const index = whereIsAreaOfRectangular(
+          x,
+          yLabelWidth,
+          horizontalAxisWidth / data.length,
+        );
+        handleShowAccessory(index);
+        handleShowTooltips(index, clientX, clientY);
       } else {
         handleHiddenAccessory();
         handleHiddenTooltips();

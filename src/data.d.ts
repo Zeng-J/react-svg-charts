@@ -26,6 +26,13 @@ export interface CommonConfigType {
   colors: string[];
 }
 
+export interface CommonChartDataListItem<T extends ValueType = ValueType> {
+  /** x轴的label */
+  label: string | number;
+  /** 存储y坐标点等数据 */
+  category: T[];
+}
+
 /** 直角坐标系通用图表配置 */
 export interface CommonRectConfigType extends CommonConfigType {
   /** y轴label宽度 */
@@ -37,13 +44,10 @@ export interface CommonRectConfigType extends CommonConfigType {
 }
 
 /** 内部处理后的直角坐标系图表数据类型 */
-export interface CommonRectChartDataListItem<T extends ValueType = ValueType> {
+export interface CommonRectChartDataListItem<T>
+  extends CommonChartDataListItem<T> {
   /** x轴的每条数据的坐标点 */
   tickPosition: number;
-  /** x轴的label */
-  label: string | number;
-  /** 存储y坐标点等数据 */
-  category: T[];
 }
 
 /** 直角坐标系通用处理后的配置 */
@@ -61,16 +65,8 @@ export interface CommonRectangularConstantType extends CommonRectConfigType {
 }
 
 /** 内部处理后的极坐标系图表数据类型 */
-export interface CommonPolarChartDataListItem<T extends ValueType = ValueType> {
-  /** x轴的刻度点 */
-  tickXPosition: number;
-  /** y轴的刻度点 */
-  tickYPosition: number;
-  /** x轴的刻度文本 */
-  tickLabelXPosition: number;
-  /** y轴的刻度文本 */
-  tickLabelYPosition: number;
-  angle: number;
+export interface CommonPolarChartDataListItem<T>
+  extends CommonChartDataListItem<T> {
   /** x轴的label */
   label: string | number;
   /** 存储y坐标点等数据 */

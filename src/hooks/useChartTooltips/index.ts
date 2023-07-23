@@ -1,28 +1,19 @@
 import { RefObject, useCallback, useRef } from 'react';
-import { whereIsAreaOfRectangular } from 'react-svg-charts/utils/rect';
 
-import type { CommonRectChartDataListItem } from 'react-svg-charts/data';
+import type { CommonChartDataListItem } from 'react-svg-charts/data';
 
-interface UseSquareChartTooltipsProps<T> {
+interface UseChartTooltipsProps<T> {
   containerRef: RefObject<HTMLElement>;
-  offestX: number;
-  horizontalAxisWidth: number;
   data: T[];
   colors: string[];
 }
 
 const TOOLTIPS_CLASS_PREFIX = 'rsc-tooltips';
 
-// 直角坐标系图表的提示弹窗hooks
-export default function useSquareChartTooltips<
-  T extends CommonRectChartDataListItem = CommonRectChartDataListItem,
->({
-  data,
-  containerRef,
-  offestX,
-  horizontalAxisWidth,
-  colors,
-}: UseSquareChartTooltipsProps<T>) {
+// 图表的提示弹窗hooks
+export default function useChartTooltips<
+  T extends CommonChartDataListItem = CommonChartDataListItem,
+>({ data, containerRef, colors }: UseChartTooltipsProps<T>) {
   const tooltipsRef = useRef<HTMLDivElement>();
   const handleHiddenTooltips = useCallback(() => {
     if (tooltipsRef.current) {
@@ -30,7 +21,11 @@ export default function useSquareChartTooltips<
     }
   }, []);
 
-  const handleShowTooltips = (x: number, clientX: number, clientY: number) => {
+  const handleShowTooltips = (
+    index: number,
+    clientX: number,
+    clientY: number,
+  ) => {
     if (!containerRef.current) {
       return;
     }
@@ -41,13 +36,6 @@ export default function useSquareChartTooltips<
       tooltipsRef.current.setAttribute('class', TOOLTIPS_CLASS_PREFIX);
       containerRef.current.appendChild(tooltipsRef.current);
     }
-
-    // 判断鼠标位置鼠标位于哪个x轴刻度区域内
-    const index = whereIsAreaOfRectangular(
-      x,
-      offestX,
-      horizontalAxisWidth / data.length,
-    );
 
     // 显示tooltips
     const currentItem = data[index];

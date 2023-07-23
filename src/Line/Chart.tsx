@@ -12,7 +12,7 @@ import {
   whereIsAreaOfRectangular,
 } from 'react-svg-charts/utils/rect';
 import type { DataListItem } from '../data';
-import useSquareChartTooltips from '../hooks/useSquareChartTooltips';
+import useChartTooltips from '../hooks/useChartTooltips';
 import type { LineChartDataListItem, LineConfigType } from './data';
 
 import { generateChartData, generateConfig } from './utils';
@@ -63,10 +63,8 @@ function LineChart({
   );
 
   // 提示窗
-  const { handleHiddenTooltips, handleShowTooltips } = useSquareChartTooltips({
+  const { handleHiddenTooltips, handleShowTooltips } = useChartTooltips({
     data: chartData,
-    horizontalAxisWidth,
-    offestX: coordinateLeftTopX,
     containerRef,
     colors,
   });
@@ -132,12 +130,7 @@ function LineChart({
     );
   }, []);
 
-  const handleShowAccessory = (x: number) => {
-    const index = whereIsAreaOfRectangular(
-      x,
-      coordinateLeftTopX,
-      horizontalAxisWidth / chartData.length,
-    );
+  const handleShowAccessory = (index: number) => {
     const currentItem = chartData[index];
     if (currentItem) {
       // 辅助线绘制
@@ -157,8 +150,14 @@ function LineChart({
         verticalAxisHeight,
       });
       if (isWithin) {
-        handleShowAccessory(x);
-        handleShowTooltips(x, clientX, clientY);
+        // 判断鼠标位置鼠标位于哪个x轴刻度区域内
+        const index = whereIsAreaOfRectangular(
+          x,
+          coordinateLeftTopX,
+          horizontalAxisWidth / chartData.length,
+        );
+        handleShowAccessory(index);
+        handleShowTooltips(index, clientX, clientY);
       } else {
         handleHiddenAccessory();
         handleHiddenTooltips();
