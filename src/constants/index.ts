@@ -15,15 +15,24 @@ export const COLORS = [
   '#b15928',
 ];
 
+export const COMMON_DEFAULT_CONFIG = {
+  labelFontSize: 12,
+  yMaxValue: 100,
+  yTickCount: 5,
+  autoFit: true,
+  colors: COLORS,
+};
+
 // 直角坐标系图表的默认配置
 export const DEFAULT_CONFIG_OF_RECT = {
-  labelFontSize: 12,
+  ...COMMON_DEFAULT_CONFIG,
   yLabelWidth: 36,
   yLabelPaddingRight: 8,
   xLabelPaddingTop: 8,
-  yMaxValue: 100,
-  yCount: 5,
-  barGap: 4,
-  autoFit: true,
-  colors: COLORS,
+};
+
+// 极坐标系图表的默认配置
+export const DEFAULT_CONFIG_OF_POLAR = {
+  ...COMMON_DEFAULT_CONFIG,
+  padding: 36,
 };

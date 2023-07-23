@@ -1,24 +1,23 @@
 import React from 'react';
 import AutoFitContainer from 'react-svg-charts/AutoFitContainer';
-import { DEFAULT_CONFIG_OF_RECT } from 'react-svg-charts/constants';
+import { DEFAULT_CONFIG_OF_POLAR } from 'react-svg-charts/constants';
 import type { DataListItem } from '../data';
-import HistogramChart from './Chart';
-import type { HistogramConfigType } from './data';
+import RadarChart from './Chart';
+import type { RadarConfigType } from './data';
 
-export type HistogramProps = {
+export type RadarProps = {
   data: DataListItem[];
-  config?: Partial<HistogramConfigType>;
+  config?: Partial<RadarConfigType>;
 };
 
-function Histogram({ data, config = {} }: HistogramProps) {
+function Radar({ data, config = {} }: RadarProps) {
   return (
     <AutoFitContainer config={config}>
       {({ width, height }, containerRef) => (
-        <HistogramChart
+        <RadarChart
           data={data}
           config={{
-            ...DEFAULT_CONFIG_OF_RECT,
-            barGap: 4,
+            ...DEFAULT_CONFIG_OF_POLAR,
             ...config,
             width,
             height,
@@ -30,4 +29,4 @@ function Histogram({ data, config = {} }: HistogramProps) {
   );
 }
 
-export default Histogram;
+export default Radar;

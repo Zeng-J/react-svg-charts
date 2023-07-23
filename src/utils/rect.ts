@@ -1,5 +1,5 @@
 import { MouseEvent } from 'react';
-import { CommonConfigType, CommonRectangularConstantType } from '../data';
+import { CommonRectangularConstantType, CommonRectConfigType } from '../data';
 
 // 针对直角坐标系 判断鼠标在哪个区域内 返回0|1|...
 export const whereIsAreaOfRectangular = (
@@ -39,7 +39,7 @@ export const isWithinOrNotOfRectangular = (
 
 // 生成直角坐标系通用的配置
 export function generateConfigOfRectangular<
-  T extends CommonConfigType = CommonConfigType,
+  T extends CommonRectConfigType = CommonRectConfigType,
 >(config: T): T & CommonRectangularConstantType {
   const coordinateLeftTopX = config.yLabelWidth;
   const coordinateLeftTopY = config.labelFontSize / 2;
@@ -56,6 +56,6 @@ export function generateConfigOfRectangular<
     coordinateLeftTopY,
     horizontalAxisWidth,
     verticalAxisHeight,
-    yGap: verticalAxisHeight / config.yCount,
+    yGap: verticalAxisHeight / config.yTickCount,
   };
 }

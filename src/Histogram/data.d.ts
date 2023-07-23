@@ -1,7 +1,7 @@
 import {
-  CommonChartDataListItem,
-  CommonConfigType,
   CommonRectangularConstantType,
+  CommonRectChartDataListItem,
+  CommonRectConfigType,
   ValueType,
 } from '../data';
 
@@ -12,7 +12,7 @@ interface HistogramCategoryType extends ValueType {
 }
 
 export interface HistogramChartDataListItem
-  extends CommonChartDataListItem<HistogramCategoryType> {
+  extends CommonRectChartDataListItem<HistogramCategoryType> {
   /** 柱形hover时的背景色宽度 */
   barBackgroundWidth: number;
 }
@@ -24,7 +24,7 @@ export interface HistogramExclusiveConfigType {
   barGap: number;
 }
 
-export type HistogramConfigType = CommonConfigType &
+export type HistogramConfigType = CommonRectConfigType &
   HistogramExclusiveConfigType;
 
 export type HistogramConstantType = CommonRectangularConstantType &

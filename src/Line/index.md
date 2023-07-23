@@ -19,7 +19,7 @@ export default () => (
       width: 480,
       height: 300,
       yMaxValue: 60,
-      yCount: 3,
+      yTickCount: 3,
     }}
   />
 );
@@ -214,5 +214,5 @@ export default () => {
 | yLabelPaddingRight | y 轴 label 的右边距                                      | number   | 8              |
 | xLabelPaddingTop   | x 轴 label 的上边距                                      | number   | 8              |
 | yMaxValue          | y 轴最大值                                               | number   | 100            |
-| yCount             | y 轴显示多少条刻度线                                     | number   | 5              |
+| yTickCount         | y 轴显示多少条刻度线                                     | number   | 5              |
 | colors             | 柱形颜色                                                 | string[] | [#a6cee3, ...] |
