@@ -1,18 +1,13 @@
 import { CommonPolarConfigType } from 'react-svg-charts/data';
 
-// 目前最多显示12个类别，需要可以补充颜色
+// 目前最多显示7个类别，需要可以补充颜色
 // 可以考虑色板库https://www.npmjs.com/package/d3-scale-chromatic，包大小100k+
 export const COLORS = [
   '#a6cee3',
-  '#1f78b4',
   '#b2df8a',
-  '#33a02c',
   '#fb9a99',
-  '#e31a1c',
   '#fdbf6f',
-  '#ff7f00',
   '#cab2d6',
-  '#6a3d9a',
   '#ffff99',
   '#b15928',
 ];
