@@ -107,7 +107,7 @@ export default function PolarCoordinateSystem<
                 x={centerX - 6}
                 y={centerY - curTickRaius}
                 fill="#4D535C"
-                fontSize={12}
+                fontSize={labelFontSize}
                 dominantBaseline="central"
                 style={{ textAnchor: 'end' }}
               >
@@ -119,7 +119,16 @@ export default function PolarCoordinateSystem<
       </g>
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [centerX, centerY, radius, yMaxValue, JSON.stringify(yTicks), yAxisType]);
+  }, [
+    centerX,
+    centerY,
+    radius,
+    yMaxValue,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    JSON.stringify(yTicks),
+    yAxisType,
+    labelFontSize,
+  ]);
 
   return (
     <>
