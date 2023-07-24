@@ -5,116 +5,98 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
+import useChartTooltips from 'react-svg-charts/hooks/useChartTooltips';
 import useThrottle from 'react-svg-charts/hooks/useThrottle';
-import RectangularCoordinateSystem from 'react-svg-charts/RectangularCoordinateSystem';
+import PolarCoordinateSystem from 'react-svg-charts/PolarCoordinateSystem';
 import {
-  isWithinOrNotOfRectangular,
-  whereIsAreaOfRectangular,
-} from 'react-svg-charts/utils/rect';
+  isWithinOrNotOfPolar,
+  whereIsAreaOfPolar,
+} from 'react-svg-charts/utils/polar';
 import type { DataListItem } from '../data';
-import useChartTooltips from '../hooks/useChartTooltips';
-import type { LineChartDataListItem, LineConfigType } from './data';
+import type { RadarChartDataListItem, RadarConfigType } from './data';
 
 import { generateChartData, generateConfig } from './utils';
 
-interface LineChartProps {
+interface RadarChartProps {
   data: DataListItem[];
-  config: LineConfigType;
+  config: RadarConfigType;
   containerRef: RefObject<HTMLDivElement>;
 }
 
-function LineChart({
+function RadarChart({
   data,
   config: externalConfig,
   containerRef,
-}: LineChartProps) {
-  const config = generateConfig(externalConfig);
+}: RadarChartProps) {
+  const config = generateConfig(externalConfig, { xTickcCount: data.length });
   const {
     width,
     height,
-    horizontalAxisWidth,
+    padding,
     yMaxValue,
-    verticalAxisHeight,
-    yLabelWidth,
     colors,
-    coordinateLeftTopX,
-    coordinateLeftTopY,
+    centerX,
+    centerY,
+    radius,
+    angleUnit,
   } = config;
 
   const chartData = useMemo(
     () =>
       generateChartData(data, {
-        horizontalAxisWidth,
+        centerX,
+        centerY,
         yMaxValue,
-        verticalAxisHeight,
-        yLabelWidth,
-        coordinateLeftTopY,
+        radius,
+        padding,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      JSON.stringify(data),
-      horizontalAxisWidth,
-      yMaxValue,
-      verticalAxisHeight,
-      yLabelWidth,
-      coordinateLeftTopY,
-    ],
+    [JSON.stringify(data), centerX, centerY, padding, radius, yMaxValue],
   );
-
-  // 提示窗
-  const { handleHiddenTooltips, handleShowTooltips } = useChartTooltips({
-    data: chartData,
-    containerRef,
-    colors,
-  });
 
   const crosshairsRef = useRef<SVGGElement>(null);
   const dotRef = useRef<SVGGElement>(null);
 
   const crosshairsRender = useCallback(
-    (x: number) => {
+    (x: number, y: number) => {
       if (crosshairsRef.current) {
-        const d = `M ${x} ${coordinateLeftTopY} L ${x} ${
-          coordinateLeftTopY + verticalAxisHeight
-        }`;
+        const d = `M ${centerX} ${centerY} ${x} ${y}`;
         if (crosshairsRef.current.firstChild) {
           crosshairsRef.current.children[0].setAttribute('d', d);
         } else {
           crosshairsRef.current.innerHTML = `
           <path
             d="${d}"
-            stroke="#DAE2F5"
-            fill="none"
+            stroke="#B0BFE1"
             stroke-width="1"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            stroke-dasharray="4, 4"
           />
         `;
         }
         crosshairsRef.current?.setAttribute('style', 'visibility: visible;');
       }
     },
-    [verticalAxisHeight, coordinateLeftTopY],
+    [centerX, centerY],
   );
 
-  const dotRender = useCallback((item: LineChartDataListItem) => {
+  const dotRender = useCallback((item: RadarChartDataListItem) => {
     if (dotRef.current) {
       if (dotRef.current.children.length > 0) {
         Array.prototype.map.call(dotRef.current.children, (g, index) => {
-          g.children[0]?.setAttribute('cx', item.tickPosition);
-          g.children[0]?.setAttribute('cy', item.category[index].yPosition);
-          g.children[1]?.setAttribute('cx', item.tickPosition);
-          g.children[1]?.setAttribute('cy', item.category[index].yPosition);
+          const categoryItem = item.category[index];
+          g.children[0]?.setAttribute('cx', categoryItem.xPosition);
+          g.children[0]?.setAttribute('cy', categoryItem.yPosition);
+          g.children[1]?.setAttribute('cx', categoryItem.xPosition);
+          g.children[1]?.setAttribute('cy', categoryItem.yPosition);
         });
       } else {
         dotRef.current.innerHTML = item.category
           .map(
             // 第一个circle为点的边框，第二个为圆心
-            (c, i) => `
+            (sub, i) => `
               <g>
-                <circle r="6" cx="${item.tickPosition}" cy="${c.yPosition}" fill="#fff" />
-                <circle r="4" cx="${item.tickPosition}" cy="${c.yPosition}" fill="${colors[i]}" />
+                <circle r="6" cx="${sub.xPosition}" cy="${sub.yPosition}" fill="#fff" />
+                <circle r="4" cx="${sub.xPosition}" cy="${sub.yPosition}" fill="${colors[i]}" />
               </g>
              `,
           )
@@ -130,11 +112,11 @@ function LineChart({
     );
   }, []);
 
-  const handleShowAccessory = (index: number) => {
+  const handleShowAccessory = (index: number, x: number, y: number) => {
     const currentItem = chartData[index];
     if (currentItem) {
       // 辅助线绘制
-      crosshairsRender(currentItem.tickPosition);
+      crosshairsRender(x, y);
       // 辅助点绘制
       dotRender(currentItem);
     } else {
@@ -142,21 +124,23 @@ function LineChart({
     }
   };
 
+  const { handleHiddenTooltips, handleShowTooltips } = useChartTooltips({
+    data: chartData,
+    containerRef,
+    colors,
+  });
+
   const handleMouseMove = useThrottle(
     (e: MouseEvent) => {
-      const { x, clientX, clientY, isWithin } = isWithinOrNotOfRectangular(e, {
-        coordinateLeftTopX,
-        coordinateLeftTopY,
-        verticalAxisHeight,
+      const { x, y, clientX, clientY, isWithin } = isWithinOrNotOfPolar(e, {
+        centerX,
+        centerY,
+        radius,
       });
       if (isWithin) {
         // 判断鼠标位置鼠标位于哪个x轴刻度区域内
-        const index = whereIsAreaOfRectangular(
-          x,
-          coordinateLeftTopX,
-          horizontalAxisWidth / chartData.length,
-        );
-        handleShowAccessory(index);
+        const index = whereIsAreaOfPolar(x, y, centerX, centerY, angleUnit);
+        handleShowAccessory(index, x, y);
         handleShowTooltips(index, clientX, clientY);
       } else {
         handleHiddenAccessory();
@@ -171,22 +155,26 @@ function LineChart({
     handleHiddenTooltips();
   };
 
-  const pathLineNode = useMemo(() => {
+  const polygonNode = useMemo(() => {
     if (chartData.length <= 0) {
       return null;
     }
     const { category } = chartData[0];
     return (
       <g>
-        {category.map((c, index: number) => (
-          <path
-            key={`${index}_${c.name}`}
-            d={chartData.map((item) => item.category[index].d).join('')}
+        {category.map((item, index: number) => (
+          <polygon
+            key={item.name}
+            points={chartData
+              .map(
+                (item) =>
+                  `${item.category[index].xPosition} ${item.category[index].yPosition} `,
+              )
+              .join('')}
             stroke={colors[index]}
-            fill="none"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+            fill={colors[index]}
+            fillOpacity="0.2"
+            strokeWidth="1"
           />
         ))}
       </g>
@@ -201,14 +189,14 @@ function LineChart({
       onMouseLeave={handleMouseLeave}
     >
       {/* 坐标系 */}
-      <RectangularCoordinateSystem config={config} chartData={chartData} />
+      <PolarCoordinateSystem config={config} chartData={chartData} />
+      {polygonNode}
       {/* 辅助线 */}
       <g ref={crosshairsRef} />
-      {pathLineNode}
       {/* 辅助点 */}
       <g ref={dotRef} />
     </svg>
   );
 }
 
-export default LineChart;
+export default RadarChart;

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import {
-  CommonChartDataListItem,
   CommonRectangularConstantType,
+  CommonRectChartDataListItem,
 } from '../data';
 
 interface RectangularCoordinateSystemProps<T, K> {
@@ -11,12 +11,12 @@ interface RectangularCoordinateSystemProps<T, K> {
 
 export default function RectangularCoordinateSystem<
   T extends CommonRectangularConstantType = CommonRectangularConstantType,
-  K extends CommonChartDataListItem = CommonChartDataListItem,
+  K extends CommonRectChartDataListItem = CommonRectChartDataListItem,
 >({ config, chartData }: RectangularCoordinateSystemProps<T, K>) {
   const {
     yGap,
     yMaxValue,
-    yCount,
+    yTickCount,
     yLabelWidth,
     yLabelPaddingRight,
     labelFontSize,
@@ -29,9 +29,9 @@ export default function RectangularCoordinateSystem<
   // y轴坐标系
   const yCoordinateAxisNode = useMemo(() => {
     // 刻度线单位值
-    const yUnit = yMaxValue / yCount;
+    const yUnit = yMaxValue / yTickCount;
     // y轴刻度线
-    const yLineList = Array.from({ length: yCount + 1 }).map(
+    const yLineList = Array.from({ length: yTickCount + 1 }).map(
       (_, i) => yMaxValue - yUnit * i,
     );
     return (
@@ -58,7 +58,7 @@ export default function RectangularCoordinateSystem<
                 stroke="#E1E8F7"
                 strokeWidth="1"
                 // x轴线为实线，其他为虚线
-                strokeDasharray={index !== yCount ? '4, 4' : undefined}
+                strokeDasharray={index !== yTickCount ? '4, 4' : undefined}
               />
             </g>
           );
@@ -69,7 +69,7 @@ export default function RectangularCoordinateSystem<
     coordinateLeftTopY,
     labelFontSize,
     width,
-    yCount,
+    yTickCount,
     yGap,
     yLabelPaddingRight,
     yLabelWidth,

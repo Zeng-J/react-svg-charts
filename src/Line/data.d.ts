@@ -1,7 +1,7 @@
 import {
-  CommonChartDataListItem,
-  CommonConfigType,
   CommonRectangularConstantType,
+  CommonRectChartDataListItem,
+  CommonRectConfigType,
   ValueType,
 } from '../data';
 
@@ -12,9 +12,9 @@ interface LineCategoryType extends ValueType {
 }
 
 /** 处理后的折线图数据 */
-export type LineChartDataListItem = CommonChartDataListItem<CategoryType>;
+export type LineChartDataListItem = CommonRectChartDataListItem<CategoryType>;
 
-export type LineConfigType = CommonConfigType;
+export type LineConfigType = CommonRectConfigType;
 
 /** 折线图的所有计算后的常量参数 */
 export type LineConstantType = CommonRectangularConstantType;
