@@ -93,7 +93,7 @@ export default function RectangularCoordinateSystem<
             <text
               x={item.tickPosition}
               y={height}
-              dominantBaseline="auto"
+              dominantBaseline="text-after-edge"
               fontSize={labelFontSize}
               fill="#828b94"
               style={{ textAnchor: 'middle' }}

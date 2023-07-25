@@ -1,3 +1,8 @@
+---
+nav: 组件
+order: -1
+---
+
 # 柱形图
 
 ## 代码演示
@@ -5,7 +10,7 @@
 ### 基础用法
 
 ```jsx
-import { Histogram } from 'react-svg-charts';
+import { Histogram } from 'rs-charts';
 
 export default () => (
   <Histogram
@@ -25,7 +30,7 @@ export default () => (
 ### 多组柱形图
 
 ```jsx
-import { Histogram } from 'react-svg-charts';
+import { Histogram } from 'rs-charts';
 
 export default () => {
   return (

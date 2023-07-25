@@ -1,10 +1,13 @@
-# rs-charts
+---
+title: 开始
+nav:
+  title: 开始
+  order: -1
+---
 
-基于 react 的 svg 图表组件库
+## 介绍
 
-## 图表
-
-![demo](./public/demo.png)
+该图表组件库基于 react，使用 svg 技术实现，可以开箱即用。
 
 ## 快速上手
 
@@ -33,7 +36,3 @@ export default () => (
   />
 );
 ```
-
-## LICENSE
-
-MIT

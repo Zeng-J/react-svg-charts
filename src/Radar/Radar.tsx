@@ -1,6 +1,6 @@
 import React from 'react';
-import AutoFitContainer from 'react-svg-charts/AutoFitContainer';
-import { DEFAULT_CONFIG_OF_POLAR } from 'react-svg-charts/constants';
+import AutoFitContainer from 'rs-charts/AutoFitContainer';
+import { DEFAULT_CONFIG_OF_POLAR } from 'rs-charts/constants';
 import type { DataListItem } from '../data';
 import RadarChart from './Chart';
 import type { RadarConfigType } from './data';

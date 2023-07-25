@@ -1,4 +1,4 @@
-import { CommonPolarConfigType } from 'react-svg-charts/data';
+import { CommonPolarConfigType } from 'rs-charts/data';
 
 // 目前最多显示7个类别，需要可以补充颜色
 // 可以考虑色板库https://www.npmjs.com/package/d3-scale-chromatic，包大小100k+

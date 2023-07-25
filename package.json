@@ -1,7 +1,16 @@
 {
-  "name": "react-svg-charts",
-  "version": "0.0.1",
+  "name": "rs-charts",
+  "version": "0.0.5",
   "description": "基于react的svg图表组件库",
+  "keywords": [
+    "charts",
+    "svg",
+    "react"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Zeng-J/react-svg-charts"
+  },
   "license": "MIT",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",

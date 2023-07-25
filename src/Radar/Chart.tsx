@@ -5,13 +5,13 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
-import useChartTooltips from 'react-svg-charts/hooks/useChartTooltips';
-import useThrottle from 'react-svg-charts/hooks/useThrottle';
-import PolarCoordinateSystem from 'react-svg-charts/PolarCoordinateSystem';
+import useChartTooltips from 'rs-charts/hooks/useChartTooltips';
+import useThrottle from 'rs-charts/hooks/useThrottle';
+import PolarCoordinateSystem from 'rs-charts/PolarCoordinateSystem';
 import {
   isWithinOrNotOfPolar,
   whereIsAreaOfPolar,
-} from 'react-svg-charts/utils/polar';
+} from 'rs-charts/utils/polar';
 import type { DataListItem } from '../data';
 import type { RadarChartDataListItem, RadarConfigType } from './data';
 

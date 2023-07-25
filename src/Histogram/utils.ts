@@ -1,4 +1,4 @@
-import type { DataListItem, ValueType } from 'react-svg-charts/data';
+import type { DataListItem, ValueType } from 'rs-charts/data';
 
 import type {
   HistogramCategoryType,
