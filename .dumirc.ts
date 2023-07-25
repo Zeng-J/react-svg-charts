@@ -3,6 +3,8 @@ import { defineConfig } from 'dumi';
 export default defineConfig({
   outputPath: 'docs-dist',
   themeConfig: {
-    name: 'react-svg-charts',
+    name: 'rs-charts',
+    footer: false,
   },
+  logo: false,
 });

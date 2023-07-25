@@ -8,8 +8,8 @@
     "baseUrl": "./",
     "paths": {
       "@@/*": [".dumi/tmp/*"],
-      "react-svg-charts": ["src"],
-      "react-svg-charts/*": ["src/*", "*"]
+      "rs-charts": ["src"],
+      "rs-charts/*": ["src/*", "*"]
     }
   },
   "include": [".dumi/**/*", ".dumirc.ts", "src/**/*"]

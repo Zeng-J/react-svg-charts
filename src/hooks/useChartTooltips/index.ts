@@ -1,6 +1,6 @@
 import { RefObject, useCallback, useRef } from 'react';
 
-import type { CommonChartDataListItem } from 'react-svg-charts/data';
+import type { CommonChartDataListItem } from 'rs-charts/data';
 
 interface UseChartTooltipsProps<T> {
   containerRef: RefObject<HTMLElement>;

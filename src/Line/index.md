@@ -1,3 +1,7 @@
+---
+order: -1
+---
+
 # 折线图
 
 ## 代码演示
@@ -5,7 +9,7 @@
 ### 基础用法
 
 ```jsx
-import { Line } from 'react-svg-charts';
+import { Line } from 'rs-charts';
 
 export default () => (
   <Line
@@ -28,7 +32,7 @@ export default () => (
 ### 多组折线图
 
 ```jsx
-import { Line } from 'react-svg-charts';
+import { Line } from 'rs-charts';
 
 export default () => {
   return (

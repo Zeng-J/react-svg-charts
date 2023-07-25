@@ -5,7 +5,7 @@
 ### 基础用法
 
 ```jsx
-import { Radar } from 'react-svg-charts';
+import { Radar } from 'rs-charts';
 
 export default () => (
   <Radar
@@ -27,7 +27,7 @@ export default () => (
 ### 多组雷达图
 
 ```jsx
-import { Radar } from 'react-svg-charts';
+import { Radar } from 'rs-charts';
 
 export default () => {
   return (

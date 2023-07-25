@@ -5,14 +5,14 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
-import useChartTooltips from 'react-svg-charts/hooks/useChartTooltips';
+import useChartTooltips from 'rs-charts/hooks/useChartTooltips';
 
-import useThrottle from 'react-svg-charts/hooks/useThrottle';
-import RectangularCoordinateSystem from 'react-svg-charts/RectangularCoordinateSystem';
+import useThrottle from 'rs-charts/hooks/useThrottle';
+import RectangularCoordinateSystem from 'rs-charts/RectangularCoordinateSystem';
 import {
   isWithinOrNotOfRectangular,
   whereIsAreaOfRectangular,
-} from 'react-svg-charts/utils/rect';
+} from 'rs-charts/utils/rect';
 import type { DataListItem } from '../data';
 import type { HistogramConfigType } from './data';
 import { generateChartData, generateConfig } from './utils';

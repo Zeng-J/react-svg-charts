@@ -1,6 +1,6 @@
 import React from 'react';
-import AutoFitContainer from 'react-svg-charts/AutoFitContainer';
-import { DEFAULT_CONFIG_OF_RECT } from 'react-svg-charts/constants';
+import AutoFitContainer from 'rs-charts/AutoFitContainer';
+import { DEFAULT_CONFIG_OF_RECT } from 'rs-charts/constants';
 import type { DataListItem } from '../data';
 import HistogramChart from './Chart';
 import type { HistogramConfigType } from './data';
