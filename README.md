@@ -4,7 +4,7 @@
 
 ## 图表
 
-![demo](./public/demo.png)
+![demo](https://zeng-j.github.io/react-svg-charts/demo.png)
 
 ## 快速上手
 
