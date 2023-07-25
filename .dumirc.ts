@@ -7,4 +7,6 @@ export default defineConfig({
     footer: false,
   },
   logo: false,
+  base: '/react-svg-charts/',
+  publicPath: '/react-svg-charts/',
 });
